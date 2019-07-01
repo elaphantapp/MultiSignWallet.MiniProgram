@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Beijing contract Wallet</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+</head>
+<style type="text/css">
+    .fl {
+        float: left;
+    }
+    
+    .fr {
+        float: right;
+    }
+    
+    html,
+    body,
+    div,
+    span,
+    applet,
+    object,
+    iframe,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p,
+    blockquote,
+    pre,
+    a,
+    abbr,
+    acronym,
+    address,
+    big,
+    cite,
+    code,
+    del,
+    dfn,
+    em,
+    img,
+    ins,
+    kbd,
+    q,
+    s,
+    samp,
+    small,
+    strike,
+    strong,
+    sub,
+    sup,
+    tt,
+    var,
+    b,
+    u,
+    i,
+    center,
+    dl,
+    dt,
+    dd,
+    ol,
+    ul,
+    li,
+    fieldset,
+    form,
+    label,
+    legend,
+    table,
+    caption,
+    tbody,
+    tfoot,
+    thead,
+    tr,
+    th,
+    td,
+    article,
+    aside,
+    canvas,
+    details,
+    embed,
+    figure,
+    figcaption,
+    footer,
+    header,
+    hgroup,
+    menu,
+    nav,
+    output,
+    ruby,
+    section,
+    summary,
+    time,
+    mark,
+    audio,
+    video {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        font-size: 100%;
+        font: inherit;
+        vertical-align: baseline;
+    }
+    /* HTML5 display-role reset for older browsers */
+    
+    article,
+    aside,
+    details,
+    figcaption,
+    figure,
+    footer,
+    header,
+    hgroup,
+    menu,
+    nav,
+    section {
+        display: block;
+    }
+    
+    body {
+        line-height: 1;
+        background: #f0eff5;
+    }
+    
+    ol,
+    ul {
+        list-style: none;
+    }
+    
+    blockquote,
+    q {
+        quotes: none;
+    }
+    
+    blockquote:before,
+    blockquote:after,
+    q:before,
+    q:after {
+        content: '';
+        content: none;
+    }
+    
+    table {
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+    /* add */
+    
+    body {
+        font-size: 12px;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, "微软雅黑";
+    }
+    
+    body,
+    html {
+        height: 100%;
+    }
+    
+    img {
+        border: 0
+    }
+    
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-size: 100%;
+        font-weight: normal;
+    }
+    
+    select,
+    input {
+        vertical-align: middle
+    }
+    
+    .clear {
+        display: block !important;
+        clear: both !important;
+        float: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        height: 0;
+        line-height: 0;
+        font-size: 0;
+        overflow: hidden;
+    }
+    
+    .clearfix {
+        zoom: 1;
+    }
+    
+    .clearfix:after {
+        content: "";
+        display: block;
+        clear: both;
+        height: 0;
+    }
+    
+    .spacer {
+        clear: both;
+        font-size: 0;
+        height: 0;
+        line-height: 0;
+    }
+    
+    a {
+        color: #333;
+        text-decoration: none
+    }
+    
+    a:hover {
+        color: #f00;
+    }
+    
+    img,
+    input,
+    label {
+        vertical-align: middle;
+    }
+    
+    body {
+        background: #E5E5E5;
+    }
+    
+    #app {
+        position: relative;
+        padding: 15px 10px;
+    }
+    
+    .first {
+        padding: 15px;
+        height: 98px;
+        background: #FFFFFF;
+        box-shadow: 0px 2px 10px rgba(106, 147, 205, 0.1);
+        border-radius: 5px;
+    }
+    
+    .first .address {
+        font-family: Bio Sans;
+        font-size: 14px;
+        color: #000000;
+        font-weight: bold;
+    }
+    
+    .first p {
+        margin-bottom: 5px;
+    }
+    
+    .first .addressContent {
+        width: 90%;
+        display: inline-block;
+        font-family: Bio Sans;
+        font-size: 14px;
+        color: #000000;
+    }
+    
+    .first .tubiao {
+        width: 10%;
+        display: inline-block;
+        font-family: Bio Sans;
+    }
+    
+    .first .tubiao img {
+        width: 24px;
+        height: 24px;
+    }
+    
+    .first .address span {
+        color: #0070C8;
+    }
+    
+    .jianju {
+        margin-top: 10px;
+    }
+    
+    .jianju1 {
+        margin-top: 15px;
+    }
+    
+    .jianju2 {
+        margin-top: 15px;
+    }
+    
+    .second {
+        padding: 15px;
+        height: 180px;
+        background: #FFFFFF;
+        box-shadow: 0px 2px 10px rgba(106, 147, 205, 0.1);
+        border-radius: 5px;
+    }
+    
+    .second .title {
+        font-family: Bio Sans;
+        font-size: 14px;
+        line-height: 17px;
+        display: flex;
+        align-items: center;
+        color: #000000;
+        font-weight: bold;
+    }
+    
+    .publics {
+        width: 100%;
+        padding: 10px 0px;
+        height: 126px;
+        overflow: auto;
+    }
+    
+    .publics p {
+        font-family: Bio Sans;
+        font-size: 14px;
+        line-height: 20px;
+        color: #000000;
+        word-wrap: break-word;
+        word-break: break-all;
+    }
+    
+    .button {
+        margin-top: 50px;
+        height: 44px;
+        line-height: 44px;
+        background: #0070C8;
+        border-radius: 200px;
+        text-align: center;
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 16px;
+        align-items: center;
+        color: #FFFFFF;
+    }
+    
+    .button1 {
+        margin-top: 20px;
+        height: 44px;
+        line-height: 44px;
+        text-align: center;
+        font-family: Roboto;
+        font-style: normal;
+        font-weight: bold;
+        font-size: 16px;
+        align-items: center;
+        color: #0070C8;
+        border: 1px solid #0070C8;
+        box-sizing: border-box;
+        border-radius: 200px;
+    }
+    
+    .button2 {
+        margin-top: 30px;
+        text-align: center;
+        font-family: Bio Sans;
+        font-size: 16px;
+        line-height: 20px;
+        color: #FF4041;
+    }
+    
+    .histroy {
+        margin-bottom: 10px;
+        height: 35px;
+        line-height: 35px;
+        background: #FFFFFF;
+        box-shadow: 0px 2px 10px rgba(106, 147, 205, 0.1);
+        border-radius: 5px;
+    }
+    
+    .histroy p {
+        font-family: Bio Sans;
+        font-size: 14px;
+        color: #000000;
+        margin-left: 10px;
+        font-weight: bold;
+    }
+    
+    .histroy p img {
+        position: absolute;
+        width: 12px;
+        height: 12px;
+        right: 25px;
+        top: 26px;
+    }
+</style>
+
+<body>
+    <div id="app">
+        <div class="histroy" v-on:click="histroy">
+            <p>{{curLangule['key13']}}<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAAdCAYAAABMr4eBAAAACXBIWXMAABYlAAAWJQFJUiTwAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAADlSURBVHgBrdXRDcIgEAbggxugdANMF3ADdQM3MG7iKN1AncD0yUcn6IMT1Alaj6Y1tdKW4/wTkoPAF0ICAPwz1loDkcEOsFrre5qmpqqqApjBDrg5i9qWIOBCSIvOSqn1YIwNoTGmIGRPtYmF8EVJkuQqgdqDlULYFxIIh51YCMcDMRD6ZC7kRbjQJMKBZpFQSEFgujv2GEEuJx1oACJuPADQDp9BO8my7NA0Te4BjmVZ5ovIEtDWUmAWCQUmEQ7gRbjADxIDfCGxwAeRAO08KeCi67reSQAX99pf6NtY9X8PF3B5A/GwyEGX+RAjAAAAAElFTkSuQmCC"
+                /></p>
+
+        </div>
+        <div class="second">
+            <p class="title">{{curLangule['key7']}}<span>{{publickeyArr.length}}</span></p>
+            <div class="publics">
+                <p v-for="(item,index) in publickeyArr">
+                    {{item}}
+                </p>
+            </div>
+            <p class="title">{{curLangule['key8']}} <span>{{this.wallet['requiredCount']}}</span></p>
+        </div>
+
+        <div class="first jianju1">
+            <p class="address">{{curLangule['key10']}}</p>
+            <p><span class="addressContent">{{wallet['Address']}}</span><span class="tubiao"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAACXBIWXMAABYlAAAWJQFJUiTwAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAGESURBVHgB7ZfNccIwEEY/eTzDlRIowb6Fm9NBOoAOrA6ADpwKCB2kg/jm5AQluARuIRxQVsYJGSM5sVcTc9C7YEvDzkM/uwvg8XhaEdYZuR0HOKYKak5vE3SjpMDPJ4xWyOI9GAibnMDHtodYk1JhFHMkA/PgcQG+HM4xDhIMQtMgbevD5U3sFE6P6ICASOkjqp9nCliiJ6FlfPL1UMll0yd0QMlCi62bsfoQ4Mbxgly8IJcQLpBFQrdW506dWsbNaSFfleWbOaW0TVuWYK9gIN8WJPdCj4lJ7hf0D1vrGNb44CCLOa3AEkyqGLQLpjmWoK4ScER9RK7gbnECZ4jINHpDt1gZz6/tFpeoa6hAkOraOhS2bmZzORMq+lH4/x3LFh8ynFdxcMyC2f1e4T2m7Kr7wBIDIsCgpUL0QmV3Vz6+WeDiBblwBVl/yv8CV3AHR1A6yE3jLEGqOCs4gxpXA7wVzKa5C8kqhqWrZiXqb6hxpVAz0a39omqlj0gll8Pj8fTjE4HBaZIaLqP9AAAAAElFTkSuQmCC"/></span></p>
+            <p class="address jianju">{{curLangule['key11']}}<span>100000 ELA</span></p>
+            <p class="address jianju1">{{curLangule['key12']}}<span> {{wallet['createTime']}}</span></p>
+        </div>
+
+        <div class="button" v-on:click="send">
+            {{curLangule['key14']}}
+        </div>
+
+        <div class="button1" v-on:click="receive">
+            {{curLangule['key15']}}
+        </div>
+
+        <div class="button2" v-on:click="del">
+            {{curLangule['key16']}}
+        </div>
+    </div>
+</body>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            loading: true,
+            zh: {
+                key7: '公钥总数:',
+                key8: '转账必需批准数:',
+                key10: '钱包地址:',
+                key11: '钱包余额:',
+                key12: '创建日期:',
+                key13: '交易记录',
+                key14: '发送',
+                key15: '接收',
+                key16: '删除这个钱包',
+            },
+            en: {
+                key7: 'Total publick keys:',
+                key8: 'Min. approval required:',
+                key10: 'Wallet address:',
+                key11: 'Wallet balance:',
+                key12: 'Created date:',
+                key13: 'History',
+                key14: 'Send',
+                key15: 'Receive',
+                key16: 'Delete this wallet'
+            },
+            curLangule: {},
+            curLanguleKey: 'zh',
+            wallet: {
+                'name': '',
+                'requiredCount': '',
+                'totalPublic': '',
+                'PublicKeys': '',
+                'Address': '',
+                'createTime': ''
+            },
+            publickeyArr: []
+        },
+        methods: {
+            getLanugle: function() {
+                this.curLangule = this.en;
+                this.curLanguleKey = 'en';
+                var JsSrc = (navigator.language || navigator.browserLanguage).toLowerCase();
+                if (JsSrc.indexOf('zh') >= 0) {
+                    // 假如浏览器语言是中文
+                    this.curLanguleKey = 'zh';
+                    this.curLangule = this.zh;
+                } else if (JsSrc.indexOf('en') >= 0) {
+                    this.curLangule = this.en;
+                    this.curLanguleKey = 'en';
+                } else {
+                    // 假如浏览器语言是其它语言
+                    this.curLangule = this.en;
+                    this.curLanguleKey = 'en';
+                }
+            },
+            send() {
+                location.href = 'send.html';
+            },
+            receive() {
+                location.href = 'receive.html';
+            },
+            del() {
+
+            },
+            histroy() {
+                location.href = 'history.html';
+            },
+            getUrlParam: function(name) {
+                //正则表达式过滤
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+                //正则规则
+                var r = window.location.search.substr(1).match(reg);
+
+                if (r != null) return decodeURI(r[2]);
+                return null;
+            },
+            dateFormat(date, sFormat) {
+                let time = {
+                    Year: 0,
+                    TYear: '0',
+                    Month: 0,
+                    TMonth: '0',
+                    Day: 0,
+                    TDay: '0',
+                    Hour: 0,
+                    THour: '0',
+                    hour: 0,
+                    Thour: '0',
+                    Minute: 0,
+                    TMinute: '0',
+                    Second: 0,
+                    TSecond: '0',
+                    Millisecond: 0
+                };
+                time.Year = date.getFullYear();
+                time.TYear = String(time.Year).substr(2);
+                time.Month = date.getMonth() + 1;
+                time.TMonth = time.Month < 10 ? "0" + time.Month : String(time.Month);
+                time.Day = date.getDate();
+                time.TDay = time.Day < 10 ? "0" + time.Day : String(time.Day);
+                time.Hour = date.getHours();
+                time.THour = time.Hour < 10 ? "0" + time.Hour : String(time.Hour);
+                time.hour = time.Hour < 13 ? time.Hour : time.Hour - 12;
+                time.Thour = time.hour < 10 ? "0" + time.hour : String(time.hour);
+                time.Minute = date.getMinutes();
+                time.TMinute = time.Minute < 10 ? "0" + time.Minute : String(time.Minute);
+                time.Second = date.getSeconds();
+                time.TSecond = time.Second < 10 ? "0" + time.Second : String(time.Second);
+                time.Millisecond = date.getMilliseconds();
+
+                return sFormat.replace(/yyyy/ig, String(time.Year))
+                    .replace(/yyy/ig, String(time.Year))
+                    .replace(/yy/ig, time.TYear)
+                    .replace(/y/ig, time.TYear)
+                    .replace(/MM/g, time.TMonth)
+                    .replace(/M/g, String(time.Month))
+                    .replace(/dd/ig, time.TDay)
+                    .replace(/d/ig, String(time.Day))
+                    .replace(/HH/g, time.THour)
+                    .replace(/H/g, String(time.Hour))
+                    .replace(/hh/g, time.Thour)
+                    .replace(/h/g, String(time.hour))
+                    .replace(/mm/g, time.TMinute)
+                    .replace(/m/g, String(time.Minute))
+                    .replace(/ss/ig, time.TSecond)
+                    .replace(/s/ig, String(time.Second))
+                    .replace(/fff/ig, String(time.Millisecond))
+            }
+        },
+        created: function() {
+            // `this` 指向 vm 实例
+            this.wallet['Address'] = this.getUrlParam('Address');
+            var walletList = localStorage.getItem('ELA-Multi-sig-Wallet') || "";
+            if (walletList === "") {
+                walletList = {};
+            } else {
+                walletList = JSON.parse(walletList);
+            }
+            if (!walletList[this.wallet['Address']]) {
+                this.wallet['createTime'] = this.dateFormat(new Date(), 'HH:mm:ss yyyy-MM-dd');
+                this.wallet['requiredCount'] = this.getUrlParam('requiredCount');
+                this.wallet['name'] = this.getUrlParam('name');
+                this.wallet['PublicKeys'] = this.getUrlParam('PublicKeys');
+                this.publickeyArr = this.wallet['PublicKeys'].split(',');
+                this.wallet["totalPublic"] = this.publickeyArr.length;
+                walletList[this.wallet['Address']] = this.wallet;
+                localStorage.setItem('ELA-Multi-sig-Wallet', JSON.stringify(walletList));
+            } else {
+                this.wallet = walletList[this.wallet['Address']];
+                this.publickeyArr = this.wallet['PublicKeys'].split(',');
+            }
+
+            this.getLanugle();
+        }
+    });
+</script>
+
+</html>

@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Send</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+    <script src="https://cdn.bootcss.com/lodash.js/4.17.12-pre/lodash.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+</head>
+<style type="text/css">
+    .fl {
+        float: left;
+    }
+    
+    .fr {
+        float: right;
+    }
+    
+    html,
+    body,
+    div,
+    span,
+    applet,
+    object,
+    iframe,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p,
+    blockquote,
+    pre,
+    a,
+    abbr,
+    acronym,
+    address,
+    big,
+    cite,
+    code,
+    del,
+    dfn,
+    em,
+    img,
+    ins,
+    kbd,
+    q,
+    s,
+    samp,
+    small,
+    strike,
+    strong,
+    sub,
+    sup,
+    tt,
+    var,
+    b,
+    u,
+    i,
+    center,
+    dl,
+    dt,
+    dd,
+    ol,
+    ul,
+    li,
+    fieldset,
+    form,
+    label,
+    legend,
+    table,
+    caption,
+    tbody,
+    tfoot,
+    thead,
+    tr,
+    th,
+    td,
+    article,
+    aside,
+    canvas,
+    details,
+    embed,
+    figure,
+    figcaption,
+    footer,
+    header,
+    hgroup,
+    menu,
+    nav,
+    output,
+    ruby,
+    section,
+    summary,
+    time,
+    mark,
+    audio,
+    video {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        font-size: 100%;
+        font: inherit;
+        vertical-align: baseline;
+    }
+    /* HTML5 display-role reset for older browsers */
+    
+    article,
+    aside,
+    details,
+    figcaption,
+    figure,
+    footer,
+    header,
+    hgroup,
+    menu,
+    nav,
+    section {
+        display: block;
+    }
+    
+    body {
+        line-height: 1;
+        background: #f0eff5;
+    }
+    
+    ol,
+    ul {
+        list-style: none;
+    }
+    
+    blockquote,
+    q {
+        quotes: none;
+    }
+    
+    blockquote:before,
+    blockquote:after,
+    q:before,
+    q:after {
+        content: '';
+        content: none;
+    }
+    
+    table {
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+    /* add */
+    
+    body {
+        font-size: 12px;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, "微软雅黑";
+    }
+    
+    body,
+    html {
+        height: 100%;
+    }
+    
+    img {
+        border: 0
+    }
+    
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-size: 100%;
+        font-weight: normal;
+    }
+    
+    select,
+    input {
+        vertical-align: middle
+    }
+    
+    .clear {
+        display: block !important;
+        clear: both !important;
+        float: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        height: 0;
+        line-height: 0;
+        font-size: 0;
+        overflow: hidden;
+    }
+    
+    .clearfix {
+        zoom: 1;
+    }
+    
+    .clearfix:after {
+        content: "";
+        display: block;
+        clear: both;
+        height: 0;
+    }
+    
+    .spacer {
+        clear: both;
+        font-size: 0;
+        height: 0;
+        line-height: 0;
+    }
+    
+    a {
+        color: #333;
+        text-decoration: none
+    }
+    
+    a:hover {
+        color: #f00;
+    }
+    
+    img,
+    input,
+    label {
+        vertical-align: middle;
+    }
+    
+    body {
+        background: #E5E5E5;
+    }
+    
+    #app {
+        position: relative;
+        padding: 15px 10px;
+    }
+    
+    .four {
+        width: 220px;
+        margin: 0 auto;
+        text-align: center;
+    }
+    
+    .four p {
+        font-family: Bio Sans;
+        font-size: 16px;
+        margin-top: 50px;
+        width: 220px;
+        line-height: 44px;
+        height: 44px;
+        background: #0070C8;
+        border-radius: 200px;
+        color: #FFFFFF;
+    }
+    
+    .five {
+        margin: 0 auto;
+        width: 252px;
+        margin-top: 10px;
+        font-family: Bio Sans;
+        font-size: 12px;
+        color: #888888;
+        text-align: center;
+    }
+    
+    .five p {
+        width: 252px;
+        word-wrap: break-word;
+        word-break: break-all;
+        line-height: 17px;
+    }
+    
+    .first {
+        padding: 15px;
+        height: 216px;
+        background: #FFFFFF;
+        box-shadow: 0px 2px 10px rgba(106, 147, 205, 0.1);
+        border-radius: 5px;
+    }
+    
+    .first .title {
+        height: 15px;
+        font-family: Bio Sans;
+        font-size: 12px;
+        line-height: 15px;
+        display: flex;
+        align-items: center;
+        color: #000000;
+    }
+    
+    .first .hang input {
+        margin: 10px 0px;
+        padding-bottom: 5px;
+        display: inline-block;
+        width: 100%;
+        height: 17px;
+        font-family: Bio Sans;
+        font-size: 14px;
+        line-height: 17px;
+        align-items: center;
+        color: #DADADA;
+        border: 0;
+        outline: none;
+        border-bottom: 1px solid #DADADA;
+    }
+    
+    .tip {
+        height: 15px;
+        font-family: Bio Sans;
+        font-size: 12px;
+        line-height: 15px;
+        align-items: center;
+        color: #888888;
+        text-align: right;
+        margin-top: 30px;
+    }
+    
+    .paste {
+        width: 48px;
+        height: 20px;
+        left: 297px;
+        top: 143px;
+        font-family: Bio Sans;
+        font-size: 14px;
+        line-height: 17px;
+        display: flex;
+        align-items: center;
+        text-align: center;
+        color: #0070C8;
+        border: 1px solid #0070C8;
+        box-sizing: border-box;
+        border-radius: 20px;
+    }
+</style>
+
+<body>
+    <div id="app">
+        <div class="first">
+            <p class="title">{{curLangule["key17"]}}</p>
+            <div class="hang">
+                <span style="display:inline-block;width: 82%"><input :placeholder="curLangule['key18']" v-model="elaAdress"/></span>
+                <span style="display:inline-block;width: 15%" class="paste">{{curLangule["key5"]}}</span>
+            </div>
+            <p class="title">{{curLangule["key19"]}}</p>
+            <div class="hang">
+                <input :placeholder="curLangule['key20']" v-model="amount" />
+            </div>
+            <p class="title">{{curLangule["key21"]}}</p>
+            <div class="hang">
+                <input :placeholder="curLangule['key22']" v-model="memo" />
+            </div>
+            <p class="tip">{{curLangule["key23"]}}{{fee}} ELA</p>
+        </div>
+        <div class="four" v-on:click="send">
+            <p>{{curLangule["key24"]}}</p>
+        </div>
+
+        <div class="five">
+            <p>2 {{curLangule["key25"]}} 3 {{curLangule["key26"]}}</p>
+        </div>
+    </div>
+</body>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            loading: true,
+            zh: {
+                key5: '粘贴',
+                key17: '发送至',
+                key18: 'ELA接收地址',
+                key19: '金额',
+                key20: 'ELA金额',
+                key21: '备注（可选）',
+                key22: '备注',
+                key23: '矿工费: ',
+                key24: '发送',
+                key25: '方中的',
+                key26: '方批准了才能完成这次交易。'
+            },
+            en: {
+                key5: 'paste',
+                key17: 'Send to',
+                key18: 'ELA receive address',
+                key19: 'Amount',
+                key20: 'Amount of ELA',
+                key21: 'Memo (optional)',
+                key22: 'memo',
+                key23: 'Miner Fee: ',
+                key24: 'Send',
+                key25: 'out of',
+                key26: 'approvals are required to complete this transaction.'
+            },
+            curLangule: {},
+            schemeConfig: {
+                "AppID": "f4d54cd97afa828a9705e38eb679fad564cf3adf4cecd1a5503498155969b07baaa4c4a016084c0f21e06c59e76c33929925052d7d0ae3cfc679a0fdf48ec23f",
+                "AppName": "ELA Multi-sig Wallet",
+                "DID": "ipFFpL1JwPRQKfhmxak8r1wWEbdkJ3rXZu",
+                "PublicKey": "035731ff69f8cfdcd9881e573143d71de2390b2e8e71fa14729e6b506f5d74939d",
+                "Tx": "",
+                "RequiredCount": 2,
+                "ReturnUrl": "https://elaphant.net/#/return_url",
+            },
+            curLanguleKey: 'zh',
+            elaAdress: "EYf3wvaiNHWvrEXL1bwSV5LytbhiPb6Vby",
+            amount: "0.1",
+            memo: "",
+            fee: "",
+            sela: 100000000
+        },
+        methods: {
+            getLanugle: function() {
+                this.curLangule = this.en;
+                this.curLanguleKey = 'en';
+                var JsSrc = (navigator.language || navigator.browserLanguage).toLowerCase();
+                if (JsSrc.indexOf('zh') >= 0) {
+                    // 假如浏览器语言是中文
+                    this.curLanguleKey = 'zh';
+                    this.curLangule = this.zh;
+                } else if (JsSrc.indexOf('en') >= 0) {
+                    this.curLangule = this.en;
+                    this.curLanguleKey = 'en';
+                } else {
+                    // 假如浏览器语言是其它语言
+                    this.curLangule = this.en;
+                    this.curLanguleKey = 'en';
+                }
+            },
+            accMul(arg1, arg2) {
+                var m = 0,
+                    s1 = arg1.toString(),
+                    s2 = arg2.toString();
+                try {
+                    m += s1.split(".")[1].length;
+                } catch (e) {}
+                try {
+                    m += s2.split(".")[1].length;
+                } catch (e) {}
+                return Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m);
+            },
+            send() {
+                this.getTx().then((data) => {
+                    if (data.status === 200) {
+                        var url = this.buildMultiTx(JSON.stringify(data.result));
+                        console.log("===============url" + url);
+                        //location.href = 'walletDetails.html';
+                    }
+                }).catch((err => {
+
+                }));
+            },
+            buildMultiTx(txJSon) {
+                console.log("===============txJson" + txJSon);
+                var url = "elaphant://multitx?";
+                var that = this;
+                _.forEach(this.schemeConfig, function(val, key, index) {
+                    if (key === 'ReturnUrl') {
+                        val = encodeURIComponent(val);
+                    } else if (key === 'Tx') {
+                        val = txJSon;
+                    }
+                    if (key === 'ReturnUrl') {
+                        url += key + '=' + val;
+                    } else {
+                        url += key + '=' + val + '&';
+                    }
+
+                });
+
+                return url;
+            },
+            getTx() {
+                var parms = {
+                    inputs: ['EYf3wvaiNHWvrEXL1bwSV5LytbhiPb6Vby'],
+                    outputs: [{
+                        addr: this.elaAdress,
+                        amt: this.accMul(this.amount, this.sela)
+                    }]
+                }
+                return new Promise((resovle, reject) => {
+                    $.ajax({
+                        url: 'https://api-wallet-ela.elastos.org/api/1/createVoteTx',
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        type: 'POST',
+                        data: JSON.stringify(parms),
+                        success: function(data) { //成功回调函数
+                            resovle(data);
+                        },
+                        error: function(err) { //失败回调函数
+                            reject(err);
+                        }
+                    });
+
+
+                })
+            }
+        },
+        created: function() {
+            // `this` 指向 vm 实例
+            this.getLanugle();
+        }
+    });
+</script>
+
+</html>

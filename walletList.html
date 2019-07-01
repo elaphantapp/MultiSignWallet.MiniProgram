@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Multi-signature Wallet</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <script src="./js/util.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+</head>
+<style type="text/css">
+    .fl {
+        float: left;
+    }
+    
+    .fr {
+        float: right;
+    }
+    
+    html,
+    body,
+    div,
+    span,
+    applet,
+    object,
+    iframe,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6,
+    p,
+    blockquote,
+    pre,
+    a,
+    abbr,
+    acronym,
+    address,
+    big,
+    cite,
+    code,
+    del,
+    dfn,
+    em,
+    img,
+    ins,
+    kbd,
+    q,
+    s,
+    samp,
+    small,
+    strike,
+    strong,
+    sub,
+    sup,
+    tt,
+    var,
+    b,
+    u,
+    i,
+    center,
+    dl,
+    dt,
+    dd,
+    ol,
+    ul,
+    li,
+    fieldset,
+    form,
+    label,
+    legend,
+    table,
+    caption,
+    tbody,
+    tfoot,
+    thead,
+    tr,
+    th,
+    td,
+    article,
+    aside,
+    canvas,
+    details,
+    embed,
+    figure,
+    figcaption,
+    footer,
+    header,
+    hgroup,
+    menu,
+    nav,
+    output,
+    ruby,
+    section,
+    summary,
+    time,
+    mark,
+    audio,
+    video {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        font-size: 100%;
+        font: inherit;
+        vertical-align: baseline;
+    }
+    /* HTML5 display-role reset for older browsers */
+    
+    article,
+    aside,
+    details,
+    figcaption,
+    figure,
+    footer,
+    header,
+    hgroup,
+    menu,
+    nav,
+    section {
+        display: block;
+    }
+    
+    body {
+        line-height: 1;
+        background: #f0eff5;
+    }
+    
+    ol,
+    ul {
+        list-style: none;
+    }
+    
+    blockquote,
+    q {
+        quotes: none;
+    }
+    
+    blockquote:before,
+    blockquote:after,
+    q:before,
+    q:after {
+        content: '';
+        content: none;
+    }
+    
+    table {
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+    /* add */
+    
+    body {
+        font-size: 12px;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, "微软雅黑";
+    }
+    
+    body,
+    html {
+        height: 100%;
+    }
+    
+    img {
+        border: 0
+    }
+    
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        font-size: 100%;
+        font-weight: normal;
+    }
+    
+    select,
+    input {
+        vertical-align: middle
+    }
+    
+    .clear {
+        display: block !important;
+        clear: both !important;
+        float: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        height: 0;
+        line-height: 0;
+        font-size: 0;
+        overflow: hidden;
+    }
+    
+    .clearfix {
+        zoom: 1;
+    }
+    
+    .clearfix:after {
+        content: "";
+        display: block;
+        clear: both;
+        height: 0;
+    }
+    
+    .spacer {
+        clear: both;
+        font-size: 0;
+        height: 0;
+        line-height: 0;
+    }
+    
+    a {
+        color: #333;
+        text-decoration: none
+    }
+    
+    a:hover {
+        color: #f00;
+    }
+    
+    img,
+    input,
+    label {
+        vertical-align: middle;
+    }
+    
+    body {
+        background: #E5E5E5;
+    }
+    
+    #app {
+        position: relative;
+        padding: 15px 10px;
+    }
+    
+    .shuoming {
+        margin-bottom: 15px;
+        font-family: Bio Sans;
+        font-size: 16px;
+        line-height: 20px;
+        display: flex;
+        align-items: center;
+        color: #000000;
+    }
+    
+    .addWallet {
+        margin-top: 10px;
+        height: 100px;
+        line-height: 100px;
+        text-align: center;
+        background: #8E8787;
+        box-shadow: 0px 2px 10px rgba(106, 147, 205, 0.1);
+        border-radius: 10px;
+        cursor: pointer;
+    }
+    
+    .addWallet p {
+        font-family: Bio Sans;
+        font-size: 20px;
+        align-items: center;
+        text-align: center;
+        color: #FFFFFF;
+    }
+    
+    .list {
+        position: relative;
+        height: 148px;
+        background: linear-gradient(62.2deg, #0070C8 63.23%, rgba(154, 200, 255, 0.53) 100%);
+        box-shadow: 0px 2px 10px rgba(106, 147, 205, 0.1);
+        border-radius: 10px;
+    }
+    
+    .list .name {
+        position: absolute;
+        font-family: Bio Sans;
+        font-size: 20px;
+        color: #FFFFFF;
+        left: 50px;
+        top: 44px;
+    }
+    
+    .list .address {
+        position: absolute;
+        font-family: Bio Sans;
+        font-size: 12px;
+        color: #FFFFFF;
+        left: 50px;
+        top: 69px;
+    }
+    
+    .list .tip {
+        position: absolute;
+        font-family: Bio Sans;
+        font-size: 12px;
+        color: #FFFFFF;
+        left: 5px;
+        bottom: 25px;
+    }
+    
+    .list .tip1 {
+        position: absolute;
+        font-family: Bio Sans;
+        font-size: 12px;
+        color: #FFFFFF;
+        left: 5px;
+        bottom: 10px;
+    }
+</style>
+
+<body>
+    <div id="app">
+        <div class="shuoming">
+            {{curLangule["key"]}}
+        </div>
+
+        <div class="list" v-on:click="clickItem(item.Address)" v-for="(item,index) in walletList">
+            <div class="item">
+                <p class="name">{{item.name}}</p>
+                <p class="address">{{item.Address}}</p>
+                <p class="tip">{{curLangule['key3']}} 1 {{curLangule['key4']}}
+                </p>
+                <p class="tip1">{{item.requiredCount}}/{{item.totalPublic}}</p>
+            </div>
+        </div>
+
+        <div class="addWallet" v-on:click="createWallet">
+            <p>{{curLangule["key2"]}}</p>
+        </div>
+    </div>
+</body>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            loading: true,
+            zh: {
+                key: '我的钱包',
+                key2: '+创建一个多签钱包',
+                key3: '最近的花费: ',
+                key4: '已批准'
+            },
+            en: {
+                key: 'My wallets',
+                key2: '+ Add multi-signature wallet',
+                key3: 'Latest expenditure: ',
+                key4: 'Approved'
+            },
+            curLangule: {},
+            curLanguleKey: 'zh',
+            walletList: {}
+        },
+        methods: {
+            getLanugle: function() {
+                this.curLangule = this.en;
+                this.curLanguleKey = 'en';
+                var JsSrc = (navigator.language || navigator.browserLanguage).toLowerCase();
+                if (JsSrc.indexOf('zh') >= 0) {
+                    // 假如浏览器语言是中文
+                    this.curLanguleKey = 'zh';
+                    this.curLangule = this.zh;
+                } else if (JsSrc.indexOf('en') >= 0) {
+                    this.curLangule = this.en;
+                    this.curLanguleKey = 'en';
+                } else {
+                    // 假如浏览器语言是其它语言
+                    this.curLangule = this.en;
+                    this.curLanguleKey = 'en';
+                }
+            },
+            createWallet() {
+                location.href = 'createWallet.html';
+            },
+            clickItem(address) {
+                location.href = 'walletDetails.html?' + 'Address=' + address;
+            }
+        },
+        created: function() {
+            // `this` 指向 vm 实例
+            var walletList = localStorage.getItem('ELA-Multi-sig-Wallet') || "";
+            if (walletList === "") {
+                this.walletList = {};
+            } else {
+                this.walletList = JSON.parse(walletList);
+            }
+            this.getLanugle();
+        }
+    });
+</script>
+
+</html>
