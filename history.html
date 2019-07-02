@@ -5,6 +5,7 @@
     <meta charset="utf-8">
     <title>Receive</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
 </head>
 <style type="text/css">
@@ -240,6 +241,7 @@
         background: #FFFFFF;
         box-shadow: 0px 2px 10px rgba(106, 147, 205, 0.1);
         border-radius: 5px;
+        margin-bottom: 10px;
     }
     
     .first .shu {
@@ -319,20 +321,88 @@
     .first .kuang1 {
         margin: 10px 20px;
     }
+    
+    .spinner {
+        display: block;
+        margin: 100px auto 0;
+        width: 150px;
+        text-align: center;
+    }
+    
+    .spinner>div {
+        width: 30px;
+        height: 30px;
+        background-color: #67CF22;
+        border-radius: 100%;
+        display: inline-block;
+        -webkit-animation: bouncedelay 1.4s infinite ease-in-out;
+        animation: bouncedelay 1.4s infinite ease-in-out;
+        /* Prevent first frame from flickering when animation starts */
+        -webkit-animation-fill-mode: both;
+        animation-fill-mode: both;
+    }
+    
+    .spinner .bounce1 {
+        -webkit-animation-delay: -0.32s;
+        animation-delay: -0.32s;
+    }
+    
+    .spinner .bounce2 {
+        -webkit-animation-delay: -0.16s;
+        animation-delay: -0.16s;
+    }
+    
+    @-webkit-keyframes bouncedelay {
+        0%,
+        80%,
+        100% {
+            -webkit-transform: scale(0.0)
+        }
+        40% {
+            -webkit-transform: scale(1.0)
+        }
+    }
+    
+    @keyframes bouncedelay {
+        0%,
+        80%,
+        100% {
+            transform: scale(0.0);
+            -webkit-transform: scale(0.0);
+        }
+        40% {
+            transform: scale(1.0);
+            -webkit-transform: scale(1.0);
+        }
+    }
 </style>
 
 <body>
     <div id="app">
-        <div class="first">
-            <div class="shu1"></div>
+        <div class="spinner" v-if="loading">
+
+            <div class="bounce1"></div>
+
+            <div class="bounce2"></div>
+
+            <div class="bounce3"></div>
+        </div>
+        <div style="text-align: center;font-size: 20px;margin-top:100px;" v-if="list.length===0&&!loading">
+            <p>{{curLangule["key29"]}}</p>
+        </div>
+        <div class="first" v-for="(item,index) in list">
+            <div class="shu1" v-if="item.Type=='income'"></div>
+            <div class="shu1" v-if="item.Type=='spend'" style=" background: #FF4041;"></div>
             <div class="kuang">
-                <span>EX2sdfhasdsalkajsdfkajsbacdcsjasfhjlas</span>
-                <span class="price">-100.00</span>
-                <span class="status">Received</span>
+                <span>{{item.Address}}</span>
+                <span class="price" v-if="item.Type=='income'">+{{div(item.Value,sela)}}</span>
+                <span class="status" v-if="item.Type=='income'">{{curLangule['Received']}}</span>
+                <span class="price" v-if="item.Type=='spend'">-{{div(item.Value,sela)}}</span>
+                <span class="status" v-if="item.Type=='spend'" style="color: #FF4041;">{{curLangule['Sent']}}</span>
             </div>
             <div class="kuang1">
-                <span style="font-size: 11px;color: #999999;">2018-12-31  5:30am</span>
-                <span style="font-size: 11px;color: #0070C8;" class="fr">2/2 Approved</span>
+                <span style="font-size: 11px;color: #999999;">{{dateFormat(new Date(item.CreateTime*1000),'yyyy-MM-dd HH:mm:ss')}}</span>
+                <span style="font-size: 11px;color: #0070C8;" class="fr"></span>
             </div>
         </div>
     </div>
@@ -347,18 +417,46 @@
                 Received: '已接收',
                 Sent: '已发送',
                 key28: '已批准',
+                key29: '没有历史数据'
             },
             en: {
                 pending: 'pending',
                 Received: 'Received',
                 Sent: 'Sent',
                 key28: 'Approved',
+                key29: 'No Histroy Data'
             },
             curLangule: {},
             curLanguleKey: 'zh',
-            qrcode: "SDH28fhbdjcjGHYb4568dh083AFfhyucu"
+            address: '',
+            list: [],
+            loading: true,
+            sela: 100000000,
         },
         methods: {
+            mul: function(a, b) {
+                var c = 0,
+                    d = a.toString(),
+                    e = b.toString();
+                try {
+                    c += d.split(".")[1].length;
+                } catch (f) {}
+                try {
+                    c += e.split(".")[1].length;
+                } catch (f) {}
+                return Number(d.replace(".", "")) * Number(e.replace(".", "")) / Math.pow(10, c);
+            },
+            div: function(a, b) {
+                var c, d, e = 0,
+                    f = 0;
+                try {
+                    e = a.toString().split(".")[1].length;
+                } catch (g) {}
+                try {
+                    f = b.toString().split(".")[1].length;
+                } catch (g) {}
+                return c = Number(a.toString().replace(".", "")), d = Number(b.toString().replace(".", "")), this.mul(c / d, Math.pow(10, f - e));
+            },
             getLanugle: function() {
                 this.curLangule = this.en;
                 this.curLanguleKey = 'en';
@@ -376,12 +474,100 @@
                     this.curLanguleKey = 'en';
                 }
             },
-            shareAddress() {
+            getHistory(address) {
+                return new Promise((resovle, reject) => {
+                    $.ajax({
+                        url: 'https://api-wallet-ela.elastos.org/api/1/history/' + address,
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        type: 'GET',
+                        success: function(data) { //成功回调函数
+                            resovle(data);
+                        },
+                        error: function(err) { //失败回调函数
+                            reject(err);
+                        }
+                    });
 
-            }
+
+                })
+            },
+            getUrlParam: function(name) {
+                //正则表达式过滤
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+                //正则规则
+                var r = window.location.search.substr(1).match(reg);
+
+                if (r != null) return decodeURI(r[2]);
+                return null;
+            },
+            dateFormat(date, sFormat) {
+                let time = {
+                    Year: 0,
+                    TYear: '0',
+                    Month: 0,
+                    TMonth: '0',
+                    Day: 0,
+                    TDay: '0',
+                    Hour: 0,
+                    THour: '0',
+                    hour: 0,
+                    Thour: '0',
+                    Minute: 0,
+                    TMinute: '0',
+                    Second: 0,
+                    TSecond: '0',
+                    Millisecond: 0
+                };
+                time.Year = date.getFullYear();
+                time.TYear = String(time.Year).substr(2);
+                time.Month = date.getMonth() + 1;
+                time.TMonth = time.Month < 10 ? "0" + time.Month : String(time.Month);
+                time.Day = date.getDate();
+                time.TDay = time.Day < 10 ? "0" + time.Day : String(time.Day);
+                time.Hour = date.getHours();
+                time.THour = time.Hour < 10 ? "0" + time.Hour : String(time.Hour);
+                time.hour = time.Hour < 13 ? time.Hour : time.Hour - 12;
+                time.Thour = time.hour < 10 ? "0" + time.hour : String(time.hour);
+                time.Minute = date.getMinutes();
+                time.TMinute = time.Minute < 10 ? "0" + time.Minute : String(time.Minute);
+                time.Second = date.getSeconds();
+                time.TSecond = time.Second < 10 ? "0" + time.Second : String(time.Second);
+                time.Millisecond = date.getMilliseconds();
+
+                return sFormat.replace(/yyyy/ig, String(time.Year))
+                    .replace(/yyy/ig, String(time.Year))
+                    .replace(/yy/ig, time.TYear)
+                    .replace(/y/ig, time.TYear)
+                    .replace(/MM/g, time.TMonth)
+                    .replace(/M/g, String(time.Month))
+                    .replace(/dd/ig, time.TDay)
+                    .replace(/d/ig, String(time.Day))
+                    .replace(/HH/g, time.THour)
+                    .replace(/H/g, String(time.Hour))
+                    .replace(/hh/g, time.Thour)
+                    .replace(/h/g, String(time.hour))
+                    .replace(/mm/g, time.TMinute)
+                    .replace(/m/g, String(time.Minute))
+                    .replace(/ss/ig, time.TSecond)
+                    .replace(/s/ig, String(time.Second))
+                    .replace(/fff/ig, String(time.Millisecond))
+            },
+
         },
         created: function() {
             // `this` 指向 vm 实例
+            this.address = this.getUrlParam('Address');
+            this.getHistory(this.address).then((res) => {
+                this.loading = false;
+                if (res.status === 200) {
+                    var items = res.result || {};
+                    this.list = res.result.History || [];
+                }
+            }).catch(() => {
+                this.loading = false;
+                this.list = [];
+            });
             this.getLanugle();
         }
     });

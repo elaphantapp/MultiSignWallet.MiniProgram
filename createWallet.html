@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <script src="https://cdn.bootcss.com/lodash.js/4.17.12-pre/lodash.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+    <script src="./js/vue-clipboard.min.js"></script>
 </head>
 <style type="text/css">
     .fl {
@@ -371,7 +372,7 @@
         <div class="list">
             <div class="del" v-for="(item,index) in publickeyArr">
                 <div class="left fl">
-                    <div class="fl" style="width:10%;height:48px;text-align: center">
+                    <div class="fl" style="width:10%;height:48px;text-align: center" v-on:click='del(item)'>
                         <span class="jianhao">-</span>
                     </div>
                     <div class="fl" style="width:90%;height:48px;line-height: 48px">
@@ -379,7 +380,7 @@
                                         </textarea>
                     </div>
                 </div>
-                <div class="right fr">
+                <div class="right fr" v-on:click="doCopy(item)">
                     <span>{{curLangule["key5"]}}</span>
                 </div>
                 <div style="padding-bottom:2px">&nbsp;</div>
@@ -387,16 +388,16 @@
         </div>
 
         <div class="add">
-            <div class="left fl">
+            <div class="left fl" v-on:click="add">
                 <div class="fl" style="width:10%;height:48px;text-align: center">
                     <span>+</span>
                 </div>
                 <div class="fl" style="width:90%;height:48px;line-height: 48px">
-                    <textarea class="tr" placeholder="Add public key">
+                    <textarea class="tr" placeholder="Add public key" v-model="spublic">
                             </textarea>
                 </div>
             </div>
-            <div class="right fr">
+            <div class="right fr" v-on:click="doCopy(spublic)">
                 <span>{{curLangule["key5"]}}</span>
             </div>
         </div>
@@ -420,7 +421,7 @@
                         <span style="width:1px;
                             display:inline-block;text-align: center;font-size: 18px;color: #DEDEE0;">|</span>
                         <span style="width: 20px;
-                            display:inline-block;text-align: center;font-size: 18px;color: #0070C8;">2</span>
+                            display:inline-block;text-align: center;font-size: 18px;color: #0070C8;">{{schemeConfig['RequiredCount']}}</span>
                         <span style="width:1px;
                             display:inline-block;text-align: center;font-size: 18px;color: #DEDEE0;">|</span>
                         <span style="width: 20px;
@@ -444,14 +445,14 @@
         data: {
             loading: true,
             zh: {
-                key5: '粘贴',
+                key5: '复制',
                 key6: '添加公钥',
                 key7: '公钥总数:',
                 key8: '转账必需批准数:',
                 key9: '创建',
             },
             en: {
-                key5: 'paste',
+                key5: 'copay',
                 key6: 'Add public key',
                 key7: 'Total public keys:',
                 key8: 'Min. approval required:',
@@ -473,7 +474,8 @@
                 '039c2699a877d2f7c860f8c0df36d26747f893f546bc4fb3f963f2baab8ed3fed5',
                 '0342401d1de94c8f7ab0283d7c906a1263e6ad7352d9a79caa8a207c41af57fadc'
             ],
-            walletName: "ELA"
+            walletName: "ELA",
+            spublic: '',
         },
         methods: {
             getLanugle: function() {
@@ -497,7 +499,7 @@
                 var url = this.buildMultiCreate();
                 //console.log("==============" + url);
                 var publicKeys = this.publickeyArr.join(",");
-                location.href = 'walletDetails.html?' + 'name=' + this.walletName + '&' + 'requiredCount=' + this.schemeConfig['RequiredCount'] + '&' + 'PublicKeys=' + publicKeys + '&' + 'Address=' + 'asdfjskldfshklfhdsklfgdsklfgjdsklsdfgnjlks';
+                location.href = 'walletDetails.html?' + 'name=' + this.walletName + '&' + 'requiredCount=' + this.schemeConfig['RequiredCount'] + '&' + 'PublicKeys=' + publicKeys + '&' + 'Address=' + '8ZCY9ksW4bxz7FCYARkXYCGmgkzABTSvwB';
             },
             buildMultiCreate() {
                 var url = "elaphant://multicreate?";
@@ -517,6 +519,32 @@
                 });
 
                 return url;
+            },
+            del(publickey) {
+                var index = this.publickeyArr.indexOf(publickey);
+                console.log("========index============" + index);
+                this.publickeyArr.splice(index, 1);
+                if (this.publickeyArr.length > 2) {
+                    this.schemeConfig['RequiredCount'] = this.publickeyArr.length - 1;
+                } else {
+                    this.schemeConfig['RequiredCount'] = 2;
+                }
+            },
+            doCopy(publickey) {
+                this.$copyText(publickey).then(function(e) {
+                    alert('Copied')
+                }, function(e) {})
+            },
+            add() {
+                if (this.spublic != "") {
+                    this.publickeyArr.push(this.spublic);
+                    if (this.publickeyArr.length > 2) {
+                        this.schemeConfig['RequiredCount'] = this.publickeyArr.length - 1;
+                    } else {
+                        this.schemeConfig['RequiredCount'] = 2;
+                    }
+                }
+
             }
         },
         created: function() {
