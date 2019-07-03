@@ -399,15 +399,15 @@
                 "DID": "ipFFpL1JwPRQKfhmxak8r1wWEbdkJ3rXZu",
                 "PublicKey": "035731ff69f8cfdcd9881e573143d71de2390b2e8e71fa14729e6b506f5d74939d",
                 "Tx": "",
-                "RequiredCount": 2,
-                "ReturnUrl": "https://elaphant.net/#/return_url",
+                "ReturnUrl": "",
             },
             curLanguleKey: 'zh',
             elaAdress: "EYf3wvaiNHWvrEXL1bwSV5LytbhiPb6Vby",
             amount: "0.1",
             memo: "",
             fee: "",
-            sela: 100000000
+            sela: 100000000,
+            address: '',
         },
         methods: {
             getLanugle: function() {
@@ -440,39 +440,47 @@
                 return Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m);
             },
             send() {
+                var v = this;
                 this.getTx().then((data) => {
+
                     if (data.status === 200) {
-                        var url = this.buildMultiTx(JSON.stringify(data.result));
+                        var url = v.buildMultiTx(data.result);
                         console.log("===============url" + url);
-                        //location.href = 'walletDetails.html';
+                        location.href = url;
+                        //location.href = 'http://dev1.elapps.net/history.html?' + 'Address=' + this.address;
                     }
                 }).catch((err => {
 
                 }));
             },
-            buildMultiTx(txJSon) {
-                console.log("===============txJson" + txJSon);
+            buildMultiTx(tx) {
+
+                if (this.memo != "") {
+                    tx.Transactions[0].Memo = this.memo;
+                }
+                var txJson = JSON.stringify(tx);
+                this.schemeConfig['Tx'] = txJson;
+                this.schemeConfig['ReturnUrl'] = 'http://dev1.elapps.net/history.html?' + 'Address=' + this.address;
                 var url = "elaphant://multitx?";
                 var that = this;
                 _.forEach(this.schemeConfig, function(val, key, index) {
+
                     if (key === 'ReturnUrl') {
                         val = encodeURIComponent(val);
                     } else if (key === 'Tx') {
-                        val = txJSon;
+                        val = encodeURIComponent(val);
                     }
                     if (key === 'ReturnUrl') {
                         url += key + '=' + val;
                     } else {
                         url += key + '=' + val + '&';
                     }
-
                 });
-
                 return url;
             },
             getTx() {
                 var parms = {
-                    inputs: ['EYf3wvaiNHWvrEXL1bwSV5LytbhiPb6Vby'],
+                    inputs: [this.address],
                     outputs: [{
                         addr: this.elaAdress,
                         amt: this.accMul(this.amount, this.sela)
@@ -495,10 +503,20 @@
 
 
                 })
+            },
+            getUrlParam: function(name) {
+                //正则表达式过滤
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+                //正则规则
+                var r = window.location.search.substr(1).match(reg);
+
+                if (r != null) return decodeURI(r[2]);
+                return null;
             }
         },
         created: function() {
             // `this` 指向 vm 实例
+            this.address = this.getUrlParam("Address");
             this.getLanugle();
         }
     });

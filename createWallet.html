@@ -447,8 +447,8 @@
         </div>
 
         <div class="add">
-            <div class="left fl" v-on:click="add">
-                <div class="fl" style="width:10%;height:48px;text-align: center">
+            <div class="left fl">
+                <div class="fl" style="width:10%;height:48px;text-align: center" v-on:click="add">
                     <span>+</span>
                 </div>
                 <div class="fl" style="width:90%;height:48px;line-height: 48px">
@@ -515,7 +515,8 @@
                 key6: 'Add public key',
                 key7: 'Total public keys:',
                 key8: 'Min. approval required:',
-                key9: 'Create'
+                key9: 'Create',
+                key29: 'Copy Success'
             },
             curLangule: {},
             schemeConfig: {
@@ -525,7 +526,7 @@
                 "PublicKey": "035731ff69f8cfdcd9881e573143d71de2390b2e8e71fa14729e6b506f5d74939d",
                 "PublicKeys": "",
                 "RequiredCount": 2,
-                "ReturnUrl": "https://elaphant.net/#/return_url",
+                "ReturnUrl": "",
             },
             curLanguleKey: 'zh',
             publickeyArr: ['02850ff33b13e6671df7ca599ef41976eb432f143f714027531bacc7fa4c8b324b',
@@ -557,10 +558,13 @@
                 }
             },
             createWallet() {
-                this.toast("ssssss");
+                var publicKeys = this.publickeyArr.join(",");
+                // this.schemeConfig['ReturnUrl'] = 'http://dev1.elapps.net/walletDetails.html?' + 'name=' + this.walletName + '&' + 'requiredCount=' + this.schemeConfig['RequiredCount'] + '&' + 'PublicKeys=' + publicKeys;
                 // var url = this.buildMultiCreate();
-                // var publicKeys = this.publickeyArr.join(",");
-                // location.href = 'walletDetails.html?' + 'name=' + this.walletName + '&' + 'requiredCount=' + this.schemeConfig['RequiredCount'] + '&' + 'PublicKeys=' + publicKeys + '&' + 'Address=' + '8ZCY9ksW4bxz7FCYARkXYCGmgkzABTSvwB';
+                // var turl = 'https://elephantwallet.app/redirect?appName=ELA Multi-sig Wallet&appTitle=ELA Multi-sig Wallet&redirectURL=' + encodeURIComponent(url);
+                // console.log("======multicreate=======" + turl);
+                location.href = turl;
+                //location.href = 'walletDetails.html?' + 'name=' + this.walletName + '&' + 'requiredCount=' + this.schemeConfig['RequiredCount'] + '&' + 'PublicKeys=' + publicKeys + '&' + 'Address=' + '8ZCY9ksW4bxz7FCYARkXYCGmgkzABTSvwB';
             },
             buildMultiCreate() {
                 var url = "elaphant://multicreate?";
@@ -591,8 +595,9 @@
                 }
             },
             doCopy(publickey) {
+                var v = this;
                 this.$copyText(publickey).then(function(e) {
-                    alert('Copied')
+                    v.toast(v.curLangule['key29']);
                 }, function(e) {})
             },
             add() {
@@ -621,7 +626,7 @@
                 }
             },
             toast(str) {
-                var v = this
+                var v = this;
                 v.toastText = str
                 v.toastShow = true
                 setTimeout(function() {
@@ -631,6 +636,11 @@
         },
         created: function() {
             // `this` 指向 vm 实例
+            if (this.publickeyArr.length > 2) {
+                this.schemeConfig['RequiredCount'] = this.publickeyArr.length - 1;
+            } else {
+                this.schemeConfig['RequiredCount'] = 2;
+            }
             this.getLanugle();
         }
     });

@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Beijing contract Wallet</title>
+    <title></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
@@ -486,7 +486,7 @@
                 }
             },
             send() {
-                location.href = 'send.html';
+                location.href = 'send.html?Address=' + this.wallet['Address'];
             },
             receive() {
                 location.href = 'receive.html?Address=' + this.wallet['Address'];
@@ -587,7 +587,14 @@
         },
         created: function() {
             // `this` 指向 vm 实例
-            this.wallet['Address'] = this.getUrlParam('Address');
+            var mdata = this.getUrlParam("Data");
+            if (mdata) {
+                var json = JSON.parse(mdata);
+                this.wallet['Address'] = json.Address;
+            } else {
+                this.wallet['Address'] = this.getUrlParam("Address");
+            }
+
             this.getBalance(this.wallet['Address']).then((res) => {
                 if (res.status === 200) {
                     this.balance = res.result;
@@ -604,6 +611,7 @@
                 this.wallet['createTime'] = this.dateFormat(new Date(), 'HH:mm:ss yyyy-MM-dd');
                 this.wallet['requiredCount'] = this.getUrlParam('requiredCount');
                 this.wallet['name'] = this.getUrlParam('name');
+                document.title = this.wallet['name'];
                 this.wallet['PublicKeys'] = this.getUrlParam('PublicKeys');
                 this.publickeyArr = this.wallet['PublicKeys'].split(',');
                 this.wallet["totalPublic"] = this.publickeyArr.length;
@@ -611,6 +619,7 @@
                 localStorage.setItem('ELA-Multi-sig-Wallet', JSON.stringify(walletList));
             } else {
                 this.wallet = walletList[this.wallet['Address']];
+                document.title = this.wallet['name'];
                 this.publickeyArr = this.wallet['PublicKeys'].split(',');
             }
 
