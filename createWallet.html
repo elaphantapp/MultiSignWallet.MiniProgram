@@ -559,10 +559,10 @@
             },
             createWallet() {
                 var publicKeys = this.publickeyArr.join(",");
-                // this.schemeConfig['ReturnUrl'] = 'http://dev1.elapps.net/walletDetails.html?' + 'name=' + this.walletName + '&' + 'requiredCount=' + this.schemeConfig['RequiredCount'] + '&' + 'PublicKeys=' + publicKeys;
-                // var url = this.buildMultiCreate();
-                // var turl = 'https://elephantwallet.app/redirect?appName=ELA Multi-sig Wallet&appTitle=ELA Multi-sig Wallet&redirectURL=' + encodeURIComponent(url);
-                // console.log("======multicreate=======" + turl);
+                this.schemeConfig['ReturnUrl'] = 'http://dev1.elapps.net/walletDetails.html?' + 'name=' + this.walletName + '&' + 'requiredCount=' + this.schemeConfig['RequiredCount'] + '&' + 'PublicKeys=' + publicKeys;
+                var url = this.buildMultiCreate();
+                var turl = 'https://elephantwallet.app/redirect?appName=ELA Multi-sig Wallet&appTitle=ELA Multi-sig Wallet&redirectURL=' + encodeURIComponent(url);
+                console.log("======multicreate=======" + turl);
                 location.href = turl;
                 //location.href = 'walletDetails.html?' + 'name=' + this.walletName + '&' + 'requiredCount=' + this.schemeConfig['RequiredCount'] + '&' + 'PublicKeys=' + publicKeys + '&' + 'Address=' + '8ZCY9ksW4bxz7FCYARkXYCGmgkzABTSvwB';
             },
