@@ -261,6 +261,30 @@
         outline: none;
         box-shadow: 0px 2px 10px rgba(106, 147, 205, 0.1);
         border-radius: 5px;
+        height: 48px;
+    }
+    
+    .left .tr::-webkit-input-placeholder {
+        height: 48px;
+        line-height: 48px;
+    }
+    /* 使用webkit内核的浏览器 */
+    
+    .left .tr:-moz-placeholder {
+        height: 48px;
+        line-height: 48px;
+    }
+    /* Firefox版本4-18 */
+    
+    .left .tr::-moz-placeholder {
+        height: 48px;
+        line-height: 48px;
+    }
+    /* Firefox版本19+ */
+    
+    .left .tr:-ms-input-placeholder {
+        height: 48px;
+        line-height: 48px;
     }
     
     .right {
@@ -348,13 +372,24 @@
     
     .walletname {
         position: relative;
+        width: 100%;
         margin: 10px 0px;
     }
     
     .walletname input {
-        padding: 10px 0px;
+        -moz-box-sizing: border-box;
+        /*Firefox3.5+*/
+        -webkit-box-sizing: border-box;
+        /*Safari3.2+*/
+        -o-box-sizing: border-box;
+        /*Opera9.6*/
+        -ms-box-sizing: border-box;
+        /*IE8*/
+        box-sizing: border-box;
         width: 100%;
-        margin: 0px;
+        padding: 10px 0px;
+        padding-left: 10px;
+        margin: 0;
         resize: none;
         border: 0;
         vertical-align: middle;
@@ -362,10 +397,34 @@
         box-shadow: 0px 2px 10px rgba(106, 147, 205, 0.1);
         border-radius: 5px;
     }
+    
+    .toast {
+        position: fixed;
+        z-index: 2000;
+        left: 50%;
+        top: 25%;
+        transition: all .5s;
+        -webkit-transform: translateX(-50%) translateY(-50%);
+        -moz-transform: translateX(-50%) translateY(-50%);
+        -ms-transform: translateX(-50%) translateY(-50%);
+        -o-transform: translateX(-50%) translateY(-50%);
+        transform: translateX(-50%) translateY(-50%);
+        text-align: center;
+        border-radius: 5px;
+        color: #FFF;
+        background: rgba(17, 17, 17, 0.7);
+        height: 45px;
+        line-height: 45px;
+        padding: 0 15px;
+        max-width: 150px;
+    }
 </style>
 
 <body>
     <div id="app">
+        <div class="toast" v-show="toastShow">
+            {{toastText}}
+        </div>
         <div class="walletname">
             <input v-model="walletName" />
         </div>
@@ -417,7 +476,7 @@
                 <div class="fr">
                     <div class="jishu">
                         <span style="width: 20px;
-                        display:inline-block;text-align: center;font-size: 18px;color: #888888;">-</span>
+                        display:inline-block;text-align: center;font-size: 18px;color: #888888;" v-on:click="jianhao">-</span>
                         <span style="width:1px;
                             display:inline-block;text-align: center;font-size: 18px;color: #DEDEE0;">|</span>
                         <span style="width: 20px;
@@ -425,7 +484,7 @@
                         <span style="width:1px;
                             display:inline-block;text-align: center;font-size: 18px;color: #DEDEE0;">|</span>
                         <span style="width: 20px;
-                            display:inline-block;text-align: center;font-size: 18px;color: #888888">+</span>
+                            display:inline-block;text-align: center;font-size: 18px;color: #888888" v-on:click="jiahao">+</span>
                     </div>
                 </div>
             </div>
@@ -476,6 +535,8 @@
             ],
             walletName: "ELA",
             spublic: '',
+            toastShow: false,
+            toastText: ''
         },
         methods: {
             getLanugle: function() {
@@ -496,10 +557,10 @@
                 }
             },
             createWallet() {
-                var url = this.buildMultiCreate();
-                //console.log("==============" + url);
-                var publicKeys = this.publickeyArr.join(",");
-                location.href = 'walletDetails.html?' + 'name=' + this.walletName + '&' + 'requiredCount=' + this.schemeConfig['RequiredCount'] + '&' + 'PublicKeys=' + publicKeys + '&' + 'Address=' + '8ZCY9ksW4bxz7FCYARkXYCGmgkzABTSvwB';
+                this.toast("ssssss");
+                // var url = this.buildMultiCreate();
+                // var publicKeys = this.publickeyArr.join(",");
+                // location.href = 'walletDetails.html?' + 'name=' + this.walletName + '&' + 'requiredCount=' + this.schemeConfig['RequiredCount'] + '&' + 'PublicKeys=' + publicKeys + '&' + 'Address=' + '8ZCY9ksW4bxz7FCYARkXYCGmgkzABTSvwB';
             },
             buildMultiCreate() {
                 var url = "elaphant://multicreate?";
@@ -522,7 +583,6 @@
             },
             del(publickey) {
                 var index = this.publickeyArr.indexOf(publickey);
-                console.log("========index============" + index);
                 this.publickeyArr.splice(index, 1);
                 if (this.publickeyArr.length > 2) {
                     this.schemeConfig['RequiredCount'] = this.publickeyArr.length - 1;
@@ -545,6 +605,28 @@
                     }
                 }
 
+            },
+            jianhao() {
+                if (this.schemeConfig['RequiredCount'] === 2) {
+                    this.schemeConfig['RequiredCount'] = 2;
+                } else {
+                    this.schemeConfig['RequiredCount'] = this.schemeConfig['RequiredCount'] - 1;
+                }
+            },
+            jiahao() {
+                if (this.schemeConfig['RequiredCount'] === this.publickeyArr.length) {
+                    this.schemeConfig['RequiredCount'] = this.publickeyArr.length;
+                } else {
+                    this.schemeConfig['RequiredCount'] = this.schemeConfig['RequiredCount'] + 1;
+                }
+            },
+            toast(str) {
+                var v = this
+                v.toastText = str
+                v.toastShow = true
+                setTimeout(function() {
+                    v.toastShow = false
+                }, 1500)
             }
         },
         created: function() {
