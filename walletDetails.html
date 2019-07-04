@@ -388,10 +388,34 @@
         right: 25px;
         top: 26px;
     }
+    
+    .toast {
+        position: fixed;
+        z-index: 2000;
+        left: 50%;
+        top: 25%;
+        transition: all .5s;
+        -webkit-transform: translateX(-50%) translateY(-50%);
+        -moz-transform: translateX(-50%) translateY(-50%);
+        -ms-transform: translateX(-50%) translateY(-50%);
+        -o-transform: translateX(-50%) translateY(-50%);
+        transform: translateX(-50%) translateY(-50%);
+        text-align: center;
+        border-radius: 5px;
+        color: #FFF;
+        background: rgba(17, 17, 17, 0.7);
+        height: 45px;
+        line-height: 45px;
+        padding: 0 15px;
+        max-width: 150px;
+    }
 </style>
 
 <body>
     <div id="app">
+        <div class="toast" v-show="toastShow">
+            {{toastText}}
+        </div>
         <div class="histroy" v-on:click="histroy">
             <p>{{curLangule['key13']}}<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAAdCAYAAABMr4eBAAAACXBIWXMAABYlAAAWJQFJUiTwAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAADlSURBVHgBrdXRDcIgEAbggxugdANMF3ADdQM3MG7iKN1AncD0yUcn6IMT1Alaj6Y1tdKW4/wTkoPAF0ICAPwz1loDkcEOsFrre5qmpqqqApjBDrg5i9qWIOBCSIvOSqn1YIwNoTGmIGRPtYmF8EVJkuQqgdqDlULYFxIIh51YCMcDMRD6ZC7kRbjQJMKBZpFQSEFgujv2GEEuJx1oACJuPADQDp9BO8my7NA0Te4BjmVZ5ovIEtDWUmAWCQUmEQ7gRbjADxIDfCGxwAeRAO08KeCi67reSQAX99pf6NtY9X8PF3B5A/GwyEGX+RAjAAAAAElFTkSuQmCC"
                 /></p>
@@ -442,6 +466,7 @@
                 key14: '发送',
                 key15: '接收',
                 key16: '删除这个钱包',
+                key29: '复制成功'
             },
             en: {
                 key7: 'Total publick keys:',
@@ -452,7 +477,8 @@
                 key13: 'History',
                 key14: 'Send',
                 key15: 'Receive',
-                key16: 'Delete this wallet'
+                key16: 'Delete this wallet',
+                key29: 'Copy Success'
             },
             curLangule: {},
             curLanguleKey: 'zh',
@@ -465,7 +491,9 @@
                 'createTime': ''
             },
             publickeyArr: [],
-            balance: 0.0
+            balance: 0.0,
+            toastShow: false,
+            toastText: ''
         },
         methods: {
             getLanugle: function() {
@@ -562,8 +590,9 @@
                     .replace(/fff/ig, String(time.Millisecond))
             },
             doCopy() {
+                var v = this;
                 this.$copyText(this.wallet['Address']).then(function(e) {
-                    alert('Copied')
+                    v.toast(v.curLangule['key29']);
                 }, function(e) {})
             },
             getBalance(address) {
@@ -583,12 +612,20 @@
 
 
                 })
+            },
+            toast(str) {
+                var v = this;
+                v.toastText = str
+                v.toastShow = true
+                setTimeout(function() {
+                    v.toastShow = false
+                }, 1500)
             }
         },
         created: function() {
             // `this` 指向 vm 实例
-            var mdata = this.getUrlParam("Data");
-            if (mdata) {
+            var mdata = decodeURIComponent(this.getUrlParam("Data"));
+            if (!mdata) {
                 var json = JSON.parse(mdata);
                 this.wallet['Address'] = json.Address;
             } else {

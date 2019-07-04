@@ -344,13 +344,13 @@
             </div>
             <p class="title">{{curLangule["key19"]}}</p>
             <div class="hang">
-                <input :placeholder="curLangule['key20']" v-model="amount" />
+                <input :placeholder="curLangule['key20']" v-model="amount" v-on:input="search" />
             </div>
             <p class="title">{{curLangule["key21"]}}</p>
             <div class="hang">
                 <input :placeholder="curLangule['key22']" v-model="memo" />
             </div>
-            <p class="tip">{{curLangule["key23"]}}{{fee}} ELA</p>
+            <p class="tip" v-if="amount>0">{{curLangule["key23"]}}{{fee['num']}} ELA</p>
         </div>
         <div class="four" v-on:click="send">
             <p>{{curLangule["key24"]}}</p>
@@ -403,9 +403,11 @@
             },
             curLanguleKey: 'zh',
             elaAdress: "EYf3wvaiNHWvrEXL1bwSV5LytbhiPb6Vby",
-            amount: "0.1",
+            amount: "",
             memo: "",
-            fee: "",
+            fee: {
+                "num": 0
+            },
             sela: 100000000,
             address: '',
         },
@@ -512,7 +514,39 @@
 
                 if (r != null) return decodeURI(r[2]);
                 return null;
-            }
+            },
+            search() {
+                if (this.amount > 0) {
+                    console.log("==========111111111========")
+                    this.getTx().then((res) => {
+                        if (res.status != 200) {
+                            this.$set(this.fee, 'num', 0);
+                            return;
+                        }
+                        var data = res.result || {};
+                        var Transactions = data.Transactions || [];
+                        console.log("==========111111111========" + Transactions[0].Fee);
+                        var fee = this.div(Transactions[0].Fee, this.sela);
+                        this.$set(this.fee, 'num', fee);
+                        console.log("==========222222222========" + fee);
+                    }).catch(() => {
+
+                    });
+                } else {
+                    this.$set(this.fee, 'num', 0);
+                }
+            },
+            div: function(a, b) {
+                var c, d, e = 0,
+                    f = 0;
+                try {
+                    e = a.toString().split(".")[1].length;
+                } catch (g) {}
+                try {
+                    f = b.toString().split(".")[1].length;
+                } catch (g) {}
+                return c = Number(a.toString().replace(".", "")), d = Number(b.toString().replace(".", "")), this.accMul(c / d, Math.pow(10, f - e));
+            },
         },
         created: function() {
             // `this` 指向 vm 实例

@@ -294,10 +294,34 @@
         border-radius: 200px;
         color: #FFFFFF;
     }
+    
+    .toast {
+        position: fixed;
+        z-index: 2000;
+        left: 50%;
+        top: 25%;
+        transition: all .5s;
+        -webkit-transform: translateX(-50%) translateY(-50%);
+        -moz-transform: translateX(-50%) translateY(-50%);
+        -ms-transform: translateX(-50%) translateY(-50%);
+        -o-transform: translateX(-50%) translateY(-50%);
+        transform: translateX(-50%) translateY(-50%);
+        text-align: center;
+        border-radius: 5px;
+        color: #FFF;
+        background: rgba(17, 17, 17, 0.7);
+        height: 45px;
+        line-height: 45px;
+        padding: 0 15px;
+        max-width: 150px;
+    }
 </style>
 
 <body>
     <div id="app">
+        <div class="toast" v-show="toastShow">
+            {{toastText}}
+        </div>
         <div class="first">
             <div style="width:300px;margin: 0 auto">
                 <qrcode :value="qrcode" :options="{ width: 300 }" style="display:block"></qrcode>
@@ -308,9 +332,9 @@
             <span class="left">{{qrcode}}</span><span class="right"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAACXBIWXMAABYlAAAWJQFJUiTwAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAGESURBVHgB7ZfNccIwEEY/eTzDlRIowb6Fm9NBOoAOrA6ADpwKCB2kg/jm5AQluARuIRxQVsYJGSM5sVcTc9C7YEvDzkM/uwvg8XhaEdYZuR0HOKYKak5vE3SjpMDPJ4xWyOI9GAibnMDHtodYk1JhFHMkA/PgcQG+HM4xDhIMQtMgbevD5U3sFE6P6ICASOkjqp9nCliiJ6FlfPL1UMll0yd0QMlCi62bsfoQ4Mbxgly8IJcQLpBFQrdW506dWsbNaSFfleWbOaW0TVuWYK9gIN8WJPdCj4lJ7hf0D1vrGNb44CCLOa3AEkyqGLQLpjmWoK4ScER9RK7gbnECZ4jINHpDt1gZz6/tFpeoa6hAkOraOhS2bmZzORMq+lH4/x3LFh8ynFdxcMyC2f1e4T2m7Kr7wBIDIsCgpUL0QmV3Vz6+WeDiBblwBVl/yv8CV3AHR1A6yE3jLEGqOCs4gxpXA7wVzKa5C8kqhqWrZiXqb6hxpVAz0a39omqlj0gll8Pj8fTjE4HBaZIaLqP9AAAAAElFTkSuQmCC" v-on:click="doCopy"/></span>
         </div>
 
-        <div class="four" v-on:click="shareAddress">
+        <!-- <div class="four" v-on:click="shareAddress">
             <p>{{curLangule["key27"]}}</p>
-        </div>
+        </div> -->
     </div>
 </body>
 <script>
@@ -320,13 +344,17 @@
             loading: true,
             zh: {
                 key27: '分享地址',
+                key29: '复制成功'
             },
             en: {
                 key27: 'Share Address',
+                key29: 'Copy Success'
             },
             curLangule: {},
             curLanguleKey: 'zh',
-            qrcode: "SDH28fhbdjcjGHYb4568dh083AFfhyucu"
+            qrcode: "",
+            toastShow: false,
+            toastText: ''
         },
         methods: {
             getLanugle: function() {
@@ -350,8 +378,9 @@
 
             },
             doCopy() {
+                var v = this;
                 this.$copyText(this.qrcode).then(function(e) {
-                    alert('Copied')
+                    v.toast(v.curLangule['key29']);
                 }, function(e) {})
             },
             getUrlParam: function(name) {
@@ -363,6 +392,14 @@
                 if (r != null) return decodeURI(r[2]);
                 return null;
             },
+            toast(str) {
+                var v = this;
+                v.toastText = str
+                v.toastShow = true
+                setTimeout(function() {
+                    v.toastShow = false
+                }, 1500)
+            }
         },
         created: function() {
             // `this` 指向 vm 实例
