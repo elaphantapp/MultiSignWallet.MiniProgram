@@ -8,6 +8,7 @@
     <script src="https://cdn.bootcss.com/lodash.js/4.17.12-pre/lodash.min.js"></script>
     <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+    <script src="./js/minirefresh.min.js"></script>
 </head>
 <style type="text/css">
     .fl {
@@ -242,7 +243,7 @@
         background: #FFFFFF;
         box-shadow: 0px 2px 10px rgba(106, 147, 205, 0.1);
         border-radius: 5px;
-        margin-bottom: 10px;
+        margin: 10px;
     }
     
     .first .shu {
@@ -376,10 +377,403 @@
             -webkit-transform: scale(1.0);
         }
     }
+    
+    .minirefresh-wrap {
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        z-index: 1
+    }
+    
+    .minirefresh-scroll {
+        position: relative;
+        background: #e5e5e5;
+    }
+    
+    .body-scroll-wrap {
+        position: relative
+    }
+    
+    .minirefresh-hardware-speedup {
+        -webkit-transform: translateZ(0);
+        -moz-transform: translateZ(0);
+        transform: translateZ(0)
+    }
+    
+    .minirefresh-hidden {
+        display: none!important
+    }
+    
+    .minirefresh-wrap::-webkit-scrollbar-track {
+        background-color: transparent
+    }
+    
+    .minirefresh-wrap::-webkit-scrollbar {
+        width: 6px
+    }
+    
+    .minirefresh-hide-scrollbar::-webkit-scrollbar {
+        width: 0
+    }
+    
+    .minirefresh-wrap::-webkit-scrollbar-thumb {
+        border-radius: 6px;
+        background-color: #ccc
+    }
+    
+    .minirefresh-wrap::-webkit-scrollbar-thumb:hover {
+        background-color: #aaa
+    }
+    
+    .minirefresh-rotate {
+        -webkit-animation: minirefresh-rotate .6s linear infinite;
+        animation: minirefresh-rotate .6s linear infinite
+    }
+    
+    .minirefresh-fade-in {
+        -webkit-animation: minirefresh-fade-in .5s linear forwards;
+        animation: minirefresh-fade-in .5s linear forwards
+    }
+    
+    .minirefresh-fade-out {
+        pointer-events: none;
+        -webkit-animation: minirefresh-fade-out .5s linear forwards;
+        animation: minirefresh-fade-out .5s linear forwards
+    }
+    
+    .minirefresh-totop {
+        position: fixed;
+        z-index: 9990;
+        right: 10px;
+        bottom: 30px;
+        width: 36px;
+        height: 36px;
+        border-radius: 50%;
+        background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAMAAABg3Am1AAAAclBMVEUAAAAAAAAAAAAAAADp6ekAAAAAAAAAAADOzs4AAAAAAAAAAAAAAAAAAAAAAAAAAADo6OjW1tYeHh7l5eXh4eHY2NjAwMC5ubm3t7cxMTH7+/vv7+/s7Ozc3NzNzc2tra0TExPp6enS0tLQ0NDDw8P///9ezvBLAAAAJXRSTlNNAAod1T46NbASSEc0Kykk07pTzsm9o52ZWfXg2sGvk1HUtbOmfFE0sAAAAT1JREFUSMeV1t1ygjAQhuGvu4ZU+VUUqVrtX+7/FpuCTJEsmH2POMgzMEzYgBdlISAurEmB1NiC6RkgzjYYtcmYFgCVBkGmpDnACcQSFgHlmC2nEKwtFrLrKVgnWCwZBKT1shgDsniapRHIEVH+DxhR8QAoiQMJ3UGJyMoekIkFhjrAiI47kGHU2U06Y1T2B+hhP7evfdfr/aJ92O3kAUMRe1BA6K3e7yBUeGCl9ZVz7x8Isx4Ycf3pJArjQYppu9rd6qpxhxCkHoTr9+6Gzwo/bhsKD4T1LbBaAUdBCI90cEf0wIsv4ZHMFDQYAJrpLYz8Wgcgv9ZCAwoPWAO423zxYEPd9o4HWf8BxQPuAJlYYGh+CFwuCCsXxsz2Wxoz2kGmHZXqYawe9/oDRX9k6Q9F/bGrP9j1vw76nxNlv9R2ECcaFzswAAAAAElFTkSuQmCC');
+        background-size: 100% 100%
+    }
+    
+    @-moz-keyframes minirefresh-fade-in {
+        0% {
+            opacity: 0
+        }
+        100% {
+            opacity: 1
+        }
+    }
+    
+    @-webkit-keyframes minirefresh-fade-in {
+        0% {
+            opacity: 0
+        }
+        100% {
+            opacity: 1
+        }
+    }
+    
+    @-o-keyframes minirefresh-fade-in {
+        0% {
+            opacity: 0
+        }
+        100% {
+            opacity: 1
+        }
+    }
+    
+    @keyframes minirefresh-fade-in {
+        0% {
+            opacity: 0
+        }
+        100% {
+            opacity: 1
+        }
+    }
+    
+    @-moz-keyframes minirefresh-fade-out {
+        0% {
+            opacity: 1
+        }
+        100% {
+            opacity: 0
+        }
+    }
+    
+    @-webkit-keyframes minirefresh-fade-out {
+        0% {
+            opacity: 1
+        }
+        100% {
+            opacity: 0
+        }
+    }
+    
+    @-o-keyframes minirefresh-fade-out {
+        0% {
+            opacity: 1
+        }
+        100% {
+            opacity: 0
+        }
+    }
+    
+    @keyframes minirefresh-fade-out {
+        0% {
+            opacity: 1
+        }
+        100% {
+            opacity: 0
+        }
+    }
+    
+    @-moz-keyframes minirefresh-rotate {
+        0% {
+            -webkit-transform: rotateZ(0);
+            transform: rotateZ(0);
+            -moz-transform: rotate(0)
+        }
+        100% {
+            -webkit-transform: rotateZ(360deg);
+            transform: rotateZ(360deg);
+            -moz-transform: rotate(360deg)
+        }
+    }
+    
+    @-webkit-keyframes minirefresh-rotate {
+        0% {
+            -webkit-transform: rotateZ(0);
+            transform: rotateZ(0);
+            -moz-transform: rotate(0)
+        }
+        100% {
+            -webkit-transform: rotateZ(360deg);
+            transform: rotateZ(360deg);
+            -moz-transform: rotate(360deg)
+        }
+    }
+    
+    @-o-keyframes minirefresh-rotate {
+        0% {
+            -webkit-transform: rotateZ(0);
+            transform: rotateZ(0);
+            -moz-transform: rotate(0)
+        }
+        100% {
+            -webkit-transform: rotateZ(360deg);
+            transform: rotateZ(360deg);
+            -moz-transform: rotate(360deg)
+        }
+    }
+    
+    @keyframes minirefresh-rotate {
+        0% {
+            -webkit-transform: rotateZ(0);
+            transform: rotateZ(0);
+            -moz-transform: rotate(0)
+        }
+        100% {
+            -webkit-transform: rotateZ(360deg);
+            transform: rotateZ(360deg);
+            -moz-transform: rotate(360deg)
+        }
+    }
+    
+    .minirefresh-theme-default .minirefresh-downwrap {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 75px
+    }
+    
+    .minirefresh-theme-default .minirefresh-upwrap {
+        min-height: 30px;
+        padding: 15px 0;
+        text-align: center;
+        background-color: #e5e5e5;
+    }
+    
+    .minirefresh-theme-default .downwrap-content {
+        width: 100%;
+        padding: 10px 0;
+        text-align: center
+    }
+    
+    .minirefresh-theme-default .minirefresh-downwrap .downwrap-progress,
+    .minirefresh-theme-default .minirefresh-upwrap .upwrap-progress {
+        display: inline-block;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        border: 1px solid grey;
+        margin-right: 8px;
+        border-bottom-color: transparent;
+        vertical-align: middle
+    }
+    
+    .minirefresh-theme-default .minirefresh-downwrap .downwrap-error,
+    .minirefresh-theme-default .minirefresh-downwrap .downwrap-success {
+        display: none
+    }
+    
+    .minirefresh-theme-default .minirefresh-downwrap .downwrap-tips,
+    .minirefresh-theme-default .minirefresh-upwrap .upwrap-tips {
+        display: inline-block;
+        font-size: 12px;
+        color: grey;
+        vertical-align: middle
+    }
+    
+    .minirefresh-theme-default .status-nomore .upwrap-tips {
+        padding: 15px 0
+    }
+    
+    ** * showcase通用样式 */ * {
+        -webkit-user-select: none;
+    }
+    /*
+ * 需要定制位置
+ */
+    
+    .minirefresh-wrap {
+        top: 0px;
+    }
+    
+    .data-list {
+        position: relative;
+        margin-top: 0;
+        margin-bottom: 0;
+        padding-left: 0;
+        list-style: none;
+        background-color: #E5E5E5;
+    }
+    
+    .list-item {
+        position: relative;
+        overflow: hidden;
+        padding: 11px 15px;
+        -webkit-touch-callout: none;
+    }
+    
+    .list-item:after {
+        position: absolute;
+        right: 0;
+        bottom: 0;
+        left: 15px;
+        height: 1px;
+        content: '';
+        -webkit-transform: scaleY(.5);
+        transform: scaleY(.5);
+        background-color: #c8c7cc;
+    }
+    
+    .list-item:active {
+        background: #F5F5F5;
+    }
+    
+    .msg-title {
+        display: block;
+        font-size: 15px;
+        margin: 5px;
+    }
+    
+    .msg-fs14 {
+        font-size: 14px;
+        color: #999;
+    }
+    
+    .msg-date {
+        float: right;
+        margin: 5px;
+    }
+    
+    .list-item a,
+    .navbar-header a {
+        text-decoration: none;
+        color: #18B4FE;
+    }
+    
+    .nav-tips {
+        font-size: 14px;
+        padding: 12px;
+        border-bottom: 1px solid #c8c7cc;
+        color: red;
+    }
+    
+    .navbar-header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 44px;
+        line-height: 44px;
+        text-align: center;
+        border-bottom: 1px solid #c8c7cc;
+        background-color: #FFFFFF;
+        z-index: 999;
+    }
+    
+    .nav-control {
+        position: fixed;
+        top: 45px;
+        left: 0;
+        width: 100%;
+        height: 44px;
+        line-height: 17px;
+        border-bottom: 1px solid #ddd;
+        text-align: center;
+        /**
+     * 防止点击时闪动
+     */
+        -webkit-tap-highlight-color: transparent;
+    }
+    
+    .nav-control .active {
+        border-bottom: 1px solid #FF6990;
+        color: #FF6990;
+    }
+    
+    .nav-control p {
+        display: inline-block;
+        width: 32%;
+        padding: 5px 0;
+    }
+    
+    .nav-btn-left {
+        position: absolute;
+        top: 0;
+        left: 0;
+        padding: 12px;
+        line-height: 22px;
+    }
+    
+    .content {
+        /*    padding-top: 45px;*/
+    }
+    
+    .notice {
+        padding: 5px;
+        text-align: center;
+    }
+    
+    .btn-switch {
+        display: inline-block;
+        margin-top: 14px;
+        font-size: 14px;
+        padding: 3px 15px;
+        text-align: center;
+        border: 1px solid #FF6990;
+        border-radius: 20px;
+        color: #FF6990;
+    }
 </style>
 
 <body>
-    <div id="app">
+    <div class="content">
         <div class="spinner" v-if="loading">
 
             <div class="bounce1"></div>
@@ -388,29 +782,36 @@
 
             <div class="bounce3"></div>
         </div>
-        <div style="text-align: center;font-size: 20px;margin-top:100px;" v-if="list.length===0&&!loading">
+        <div style="text-align: center;font-size: 20px;margin-top:100px;" v-if="listData.length===0&&!loading">
             <p>{{curLangule["key29"]}}</p>
         </div>
-        <div class="first" v-for="(item,index) in list">
-            <div class="shu1" v-if="item.Type=='income'"></div>
-            <div class="shu1" v-if="item.Type=='spend'" style=" background: #FF4041;"></div>
-            <div class="kuang">
-                <span>{{item.Address}}</span>
-                <span class="price" v-if="item.Type=='income'">+{{div(item.Value,sela)}}</span>
-                <span class="status" v-if="item.Type=='income'">{{curLangule['Received']}}</span>
-                <span class="price" v-if="item.Type=='spend'">-{{div(item.Value,sela)}}</span>
-                <span class="status" v-if="item.Type=='spend'" style="color: #FF4041;">{{curLangule['Sent']}}</span>
-            </div>
-            <div class="kuang1">
-                <span style="font-size: 11px;color: #999999;">{{dateFormat(new Date(item.CreateTime*1000),'yyyy-MM-dd HH:mm:ss')}}</span>
-                <span style="font-size: 11px;color: #0070C8;" class="fr"></span>
+        <div id="minirefresh" class="minirefresh-wrap">
+
+            <div class="minirefresh-scroll">
+                <div class="data-list">
+                    <div class="first" v-for="(item,index) in listData">
+                        <div class="shu1" v-if="item.Type=='income'"></div>
+                        <div class="shu1" v-if="item.Type=='spend'" style=" background: #FF4041;"></div>
+                        <div class="kuang">
+                            <span>{{item.Address}}</span>
+                            <span class="price" v-if="item.Type=='income'">+{{div(item.Value,sela)}}</span>
+                            <span class="status" v-if="item.Type=='income'">{{curLangule['Received']}}</span>
+                            <span class="price" v-if="item.Type=='spend'">-{{div(item.Value,sela)}}</span>
+                            <span class="status" v-if="item.Type=='spend'" style="color: #FF4041;">{{curLangule['Sent']}}</span>
+                        </div>
+                        <div class="kuang1">
+                            <span style="font-size: 11px;color: #999999;">{{dateFormat(new Date(item.CreateTime*1000),'yyyy-MM-dd HH:mm:ss')}}</span>
+                            <span style="font-size: 11px;color: #0070C8;" class="fr"></span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </body>
 <script>
     var app = new Vue({
-        el: '#app',
+        el: '.content',
         data: {
             loading: true,
             zh: {
@@ -418,14 +819,21 @@
                 Received: '已接收',
                 Sent: '已发送',
                 key28: '已批准',
-                key29: '没有历史数据'
+                key29: '没有历史数据',
+                key30: '下拉刷新',
+                key31: '',
+                key32: '加载中...',
             },
             en: {
                 pending: 'pending',
                 Received: 'Received',
                 Sent: 'Sent',
                 key28: 'Approved',
-                key29: 'No Histroy Data'
+                key29: 'No Histroy Data',
+                key30: 'pull Refresh',
+                key31: '',
+                key32: 'loading...',
+
             },
             curLangule: {},
             curLanguleKey: 'zh',
@@ -433,6 +841,11 @@
             list: [],
             loading: true,
             sela: 100000000,
+            minirefresh: null,
+            maxDataSize: 30,
+            requestDelayTime: 600,
+            counter: 0,
+            listData: []
         },
         methods: {
             mul: function(a, b) {
@@ -554,24 +967,90 @@
                     .replace(/s/ig, String(time.Second))
                     .replace(/fff/ig, String(time.Millisecond))
             },
+            downCallback: function() {
+                var self = this;
+                this.getHistory(this.address).then((res) => {
+                    this.loading = false;
+                    if (res.status === 200) {
+                        var items = res.result || {};
+                        this.list = res.result.History || [];
+                        this.listData = this.list;
+                        self.miniRefresh.endDownLoading(true);
+                        //this.listData = [];
+                    }
+                }).catch(() => {
+                    this.loading = false;
+                    this.listData = [];
+                    this.miniRefresh.endDownLoading(true);
+                });
+            },
+            upCallback: function() {
+
+            },
+            createTestData: function(count, isReset) {
+                if (isReset) {
+                    this.counter = 0;
+                }
+
+                var res = [],
+                    dateStr = (new Date()).toLocaleString();
+
+                for (var i = 0; i < count; i++) {
+                    res.push({
+                        title: '测试第【' + this.counter + '】条新闻标题',
+                        date: dateStr
+                    });
+
+                    this.counter++;
+                }
+
+                return res;
+            }
 
         },
+        mounted: function() {
+            var self = this;
+
+            self.miniRefresh = new MiniRefresh({
+                container: '#minirefresh',
+                down: {
+                    callback: self.downCallback,
+                    contentdown: self.curLangule['key30'],
+                    // 可选，在释放可刷新状态时，下拉刷新控件上显示的标题内容
+                    contentover: self.curLangule['key31'],
+                    // 可选，正在刷新状态时，下拉刷新控件上显示的标题内容
+                    contentrefresh: self.curLangule['key32'],
+                },
+                up: {
+                    // 默认没有锁定，可以通过API动态设置
+                    isLock: true,
+                    // 是否自动上拉加载-初始化是是否自动
+                    isAuto: false,
+                    loadFull: {
+                        // 开启配置后，只要没满屏幕，就会自动加载
+                        isEnable: false,
+                        delay: 300
+                    },
+                    callback: self.upCallback
+                }
+            });
+        },
+
         created: function() {
-            // `this` 指向 vm 实例
+            this.getLanugle();
             this.address = this.getUrlParam('Address');
             this.getHistory(this.address).then((res) => {
                 this.loading = false;
                 if (res.status === 200) {
                     var items = res.result || {};
                     this.list = res.result.History || [];
-                    var value = _.keyBy(res.result.History, 'Txid');
-                    console.log("===========value============" + JSON.stringify(value));
+                    this.listData = this.list;
+                    //this.listData = [];
                 }
             }).catch(() => {
                 this.loading = false;
-                this.list = [];
+                this.listData = [];
             });
-            this.getLanugle();
         }
     });
 </script>
