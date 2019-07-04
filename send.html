@@ -350,7 +350,7 @@
             <div class="hang">
                 <input :placeholder="curLangule['key22']" v-model="memo" />
             </div>
-            <p class="tip" v-if="amount>0">{{curLangule["key23"]}}{{fee['num']}} ELA</p>
+            <p class="tip" v-if="amount>0&&fee['num']>0">{{curLangule["key23"]}}{{fee['num']}} ELA</p>
         </div>
         <div class="four" v-on:click="send">
             <p>{{curLangule["key24"]}}</p>
