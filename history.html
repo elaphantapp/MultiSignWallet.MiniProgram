@@ -891,7 +891,7 @@
             getHistory(address) {
                 return new Promise((resovle, reject) => {
                     $.ajax({
-                        url: 'https://api-wallet-ela.elastos.org/api/1/history/' + address,
+                        url: 'https://node1.elaphant.app/api/1/history/' + address,
                         dataType: 'json',
                         contentType: 'application/json',
                         type: 'GET',

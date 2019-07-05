@@ -434,7 +434,7 @@
         <div class="first jianju1">
             <p class="address">{{curLangule['key10']}}</p>
             <p><span class="addressContent">{{wallet['Address']}}</span><span class="tubiao"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAACgAAAAoCAYAAACM/rhtAAAACXBIWXMAABYlAAAWJQFJUiTwAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAGESURBVHgB7ZfNccIwEEY/eTzDlRIowb6Fm9NBOoAOrA6ADpwKCB2kg/jm5AQluARuIRxQVsYJGSM5sVcTc9C7YEvDzkM/uwvg8XhaEdYZuR0HOKYKak5vE3SjpMDPJ4xWyOI9GAibnMDHtodYk1JhFHMkA/PgcQG+HM4xDhIMQtMgbevD5U3sFE6P6ICASOkjqp9nCliiJ6FlfPL1UMll0yd0QMlCi62bsfoQ4Mbxgly8IJcQLpBFQrdW506dWsbNaSFfleWbOaW0TVuWYK9gIN8WJPdCj4lJ7hf0D1vrGNb44CCLOa3AEkyqGLQLpjmWoK4ScER9RK7gbnECZ4jINHpDt1gZz6/tFpeoa6hAkOraOhS2bmZzORMq+lH4/x3LFh8ynFdxcMyC2f1e4T2m7Kr7wBIDIsCgpUL0QmV3Vz6+WeDiBblwBVl/yv8CV3AHR1A6yE3jLEGqOCs4gxpXA7wVzKa5C8kqhqWrZiXqb6hxpVAz0a39omqlj0gll8Pj8fTjE4HBaZIaLqP9AAAAAElFTkSuQmCC" v-on:click="doCopy"/></span></p>
-            <p class="address jianju">{{curLangule['key11']}}<span>{{balance}} ELA</span></p>
+            <p class="address jianju">{{curLangule['key11']}}<span>{{balance['num']}} ELA</span></p>
             <p class="address jianju1">{{curLangule['key12']}}<span> {{wallet['createTime']}}</span></p>
         </div>
 
@@ -466,7 +466,8 @@
                 key14: '发送',
                 key15: '接收',
                 key16: '删除这个钱包',
-                key29: '复制成功'
+                key29: '复制成功',
+                error4: '余额不足，请充值'
             },
             en: {
                 key7: 'Total publick keys:',
@@ -478,7 +479,8 @@
                 key14: 'Send',
                 key15: 'Receive',
                 key16: 'Delete this wallet',
-                key29: 'Copy Success'
+                key29: 'Copy Success',
+                error4: 'The balance is not enough'
             },
             curLangule: {},
             curLanguleKey: 'zh',
@@ -491,7 +493,9 @@
                 'createTime': ''
             },
             publickeyArr: [],
-            balance: 0.0,
+            balance: {
+                'num': 0
+            },
             toastShow: false,
             toastText: ''
         },
@@ -514,7 +518,9 @@
                 }
             },
             send() {
-                location.href = 'send.html?Address=' + this.wallet['Address'];
+                if (this.checkParms()) {
+                    location.href = 'send.html?Address=' + this.wallet['Address'];
+                }
             },
             receive() {
                 location.href = 'receive.html?Address=' + this.wallet['Address'];
@@ -598,7 +604,7 @@
             getBalance(address) {
                 return new Promise((resovle, reject) => {
                     $.ajax({
-                        url: 'https://api-wallet-ela.elastos.org/api/1/balance/' + address,
+                        url: 'https://node1.elaphant.app/api/1/balance/' + address,
                         dataType: 'json',
                         contentType: 'application/json',
                         type: 'GET',
@@ -620,6 +626,14 @@
                 setTimeout(function() {
                     v.toastShow = false
                 }, 1500)
+            },
+            checkParms() {
+                if (this.balance['num'] <= 0) {
+                    this.toast(this.curLangule['error4']);
+                    return false;
+                }
+
+                return true;
             }
         },
         created: function() {
@@ -634,10 +648,12 @@
 
             this.getBalance(this.wallet['Address']).then((res) => {
                 if (res.status === 200) {
-                    this.balance = res.result;
+                    this.$set(this.balance, 'num', res.result);
+                } else {
+                    this.$set(this.balance, 'num', 0);
                 }
 
-            })
+            });
             var walletList = localStorage.getItem('ELA-Multi-sig-Wallet') || "";
             if (walletList === "") {
                 walletList = {};

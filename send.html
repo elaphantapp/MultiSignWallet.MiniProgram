@@ -8,6 +8,7 @@
     <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
     <script src="https://cdn.bootcss.com/lodash.js/4.17.12-pre/lodash.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+    <script src="./js/vue-clipboard.min.js"></script>
 </head>
 <style type="text/css">
     .fl {
@@ -332,19 +333,44 @@
         box-sizing: border-box;
         border-radius: 20px;
     }
+    
+    .toast {
+        position: fixed;
+        z-index: 2000;
+        left: 50%;
+        top: 25%;
+        transition: all .5s;
+        -webkit-transform: translateX(-50%) translateY(-50%);
+        -moz-transform: translateX(-50%) translateY(-50%);
+        -ms-transform: translateX(-50%) translateY(-50%);
+        -o-transform: translateX(-50%) translateY(-50%);
+        transform: translateX(-50%) translateY(-50%);
+        text-align: center;
+        border-radius: 5px;
+        color: #FFF;
+        background: rgba(17, 17, 17, 0.7);
+        height: 45px;
+        line-height: 45px;
+        padding: 0 15px;
+        max-width: 150px;
+    }
 </style>
 
 <body>
     <div id="app">
+        <div class="toast" v-show="toastShow">
+            {{toastText}}
+        </div>
         <div class="first">
             <p class="title">{{curLangule["key17"]}}</p>
             <div class="hang">
                 <span style="display:inline-block;width: 82%"><input :placeholder="curLangule['key18']" v-model="elaAdress"/></span>
-                <span style="display:inline-block;width: 15%" class="paste">{{curLangule["key5"]}}</span>
+                <span style="display:inline-block;width: 15%" class="paste" v-on:click="doCopy">{{curLangule["key5"]}}</span>
             </div>
             <p class="title">{{curLangule["key19"]}}</p>
             <div class="hang">
-                <input :placeholder="curLangule['key20']" v-model="amount" v-on:input="search" />
+                <span style="display:inline-block;width: 60%"><input :placeholder="curLangule['key20']" v-model="amount" v-on:input="search" /></span>
+                <span style="display:inline-block;width: 37%">{{curLangule["key30"]}}：{{balance['num']}}</span>
             </div>
             <p class="title">{{curLangule["key21"]}}</p>
             <div class="hang">
@@ -367,7 +393,7 @@
         data: {
             loading: true,
             zh: {
-                key5: '粘贴',
+                key5: '复制',
                 key17: '发送至',
                 key18: 'ELA接收地址',
                 key19: '金额',
@@ -377,10 +403,16 @@
                 key23: '矿工费: ',
                 key24: '发送',
                 key25: '方中的',
-                key26: '方批准了才能完成这次交易。'
+                key26: '方批准了才能完成这次交易。',
+                error5: '请输入ELA接收地址',
+                error6: '请输入ELA金额',
+                error7: '请输入正确的金额',
+                error8: '余额不足',
+                key29: '复制成功',
+                key30: '余额',
             },
             en: {
-                key5: 'paste',
+                key5: 'copy',
                 key17: 'Send to',
                 key18: 'ELA receive address',
                 key19: 'Amount',
@@ -390,7 +422,14 @@
                 key23: 'Miner Fee: ',
                 key24: 'Send',
                 key25: 'out of',
-                key26: 'approvals are required to complete this transaction.'
+                key26: 'approvals are required to complete this transaction.',
+                error5: 'Please Enter ELA receive address',
+                error6: 'Please Amount of ELA',
+                error7: 'Wrong Amount',
+                error8: 'The balance is not enough',
+                key29: 'Copy Success',
+                key30: 'Balance',
+
             },
             curLangule: {},
             schemeConfig: {
@@ -410,8 +449,39 @@
             },
             sela: 100000000,
             address: '',
+            toastShow: false,
+            toastText: '',
+            balance: {
+                'num': 0
+            },
         },
         methods: {
+            getBalance(address) {
+                return new Promise((resovle, reject) => {
+                    $.ajax({
+                        url: 'https://node1.elaphant.app/api/1/balance/' + address,
+                        dataType: 'json',
+                        contentType: 'application/json',
+                        type: 'GET',
+                        success: function(data) { //成功回调函数
+                            resovle(data);
+                        },
+                        error: function(err) { //失败回调函数
+                            reject(err);
+                        }
+                    });
+
+
+                })
+            },
+            toast(str) {
+                var v = this;
+                v.toastText = str
+                v.toastShow = true
+                setTimeout(function() {
+                    v.toastShow = false
+                }, 1500)
+            },
             getLanugle: function() {
                 this.curLangule = this.en;
                 this.curLanguleKey = 'en';
@@ -442,18 +512,20 @@
                 return Number(s1.replace(".", "")) * Number(s2.replace(".", "")) / Math.pow(10, m);
             },
             send() {
-                var v = this;
-                this.getTx().then((data) => {
+                if (this.checkParm()) {
+                    var v = this;
+                    this.getTx().then((data) => {
 
-                    if (data.status === 200) {
-                        var url = v.buildMultiTx(data.result);
-                        console.log("===============url" + url);
-                        location.href = url;
-                        //location.href = 'http://dev1.elapps.net/history.html?' + 'Address=' + this.address;
-                    }
-                }).catch((err => {
+                        if (data.status === 200) {
+                            var url = v.buildMultiTx(data.result);
+                            location.href = url;
+                            //location.href = 'http://dev1.elapps.net/history.html?' + 'Address=' + this.address;
+                        }
+                    }).catch((err => {
 
-                }));
+                    }));
+                }
+
             },
             buildMultiTx(tx) {
 
@@ -490,7 +562,7 @@
                 }
                 return new Promise((resovle, reject) => {
                     $.ajax({
-                        url: 'https://api-wallet-ela.elastos.org/api/1/createVoteTx',
+                        url: 'https://node1.elaphant.app/api/1/createVoteTx',
                         dataType: 'json',
                         contentType: 'application/json',
                         type: 'POST',
@@ -517,7 +589,6 @@
             },
             search() {
                 if (this.amount > 0) {
-                    console.log("==========111111111========")
                     this.getTx().then((res) => {
                         if (res.status != 200) {
                             this.$set(this.fee, 'num', 0);
@@ -525,10 +596,8 @@
                         }
                         var data = res.result || {};
                         var Transactions = data.Transactions || [];
-                        console.log("==========111111111========" + Transactions[0].Fee);
                         var fee = this.div(Transactions[0].Fee, this.sela);
                         this.$set(this.fee, 'num', fee);
-                        console.log("==========222222222========" + fee);
                     }).catch(() => {
 
                     });
@@ -547,10 +616,60 @@
                 } catch (g) {}
                 return c = Number(a.toString().replace(".", "")), d = Number(b.toString().replace(".", "")), this.accMul(c / d, Math.pow(10, f - e));
             },
+            checkParm() {
+                if (this.elaAdress === "") {
+                    this.toast(this.curLangule['error5'])
+                    return false;
+                }
+                if (this.amount === "") {
+                    this.toast(this.curLangule['error6'])
+                    return false;
+                }
+
+                if (!this.number(this.amount)) {
+                    this.toast(this.curLangule['error7'])
+                    return false;
+                }
+
+                if (this.amount <= 0) {
+                    this.toast(this.curLangule['error7'])
+                    return false;
+                }
+
+                if (this.amount > this.balance['num']) {
+                    this.toast(this.curLangule['error8']);
+                    return;
+                }
+
+                if (this.amount.toString().indexOf(".") > -1 && this.amount.toString().split(".")[1].length > 8) {
+                    this.toast(this.curLangule['error7'])
+                    return false;
+                }
+
+                return true;
+            },
+            number(text) {
+                var numPattern = /^(([1-9]\d*)|\d)(\.\d{1,9})?$/;
+                return numPattern.test(text);
+            },
+            doCopy() {
+                var v = this;
+                this.$copyText(this.elaAdress).then(function(e) {
+                    v.toast(v.curLangule['key29']);
+                }, function(e) {})
+            },
         },
         created: function() {
             // `this` 指向 vm 实例
             this.address = this.getUrlParam("Address");
+            this.getBalance(this.address).then((res) => {
+                if (res.status === 200) {
+                    this.$set(this.balance, 'num', res.result);
+                } else {
+                    this.$set(this.balance, 'num', 0);
+                }
+
+            });
             this.getLanugle();
         }
     });
