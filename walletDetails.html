@@ -638,8 +638,10 @@
         },
         created: function() {
             // `this` 指向 vm 实例
-            var mdata = decodeURIComponent(this.getUrlParam("Data"));
-            if (!mdata) {
+            var item = this.getUrlParam("Data") || "";
+
+            if (item != "") {
+                var mdata = decodeURIComponent(item);
                 var json = JSON.parse(mdata);
                 this.wallet['Address'] = json.Address;
             } else {
