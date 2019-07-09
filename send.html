@@ -408,6 +408,7 @@
                 error6: '请输入ELA金额',
                 error7: '请输入正确的金额',
                 error8: '余额不足',
+                error9: '地址不合法',
                 key29: '复制成功',
                 key30: '余额',
             },
@@ -427,6 +428,7 @@
                 error6: 'Please Amount of ELA',
                 error7: 'Wrong Amount',
                 error8: 'The balance is not enough',
+                error9: 'Illegal address',
                 key29: 'Copy Success',
                 key30: 'Balance',
 
@@ -621,6 +623,11 @@
                     this.toast(this.curLangule['error5'])
                     return false;
                 }
+                var isOK = !this.isAddressValid(this.elaAdress);
+                if (isOK) {
+                    this.toast(this.curLangule['error9'])
+                    return false;
+                }
                 if (this.amount === "") {
                     this.toast(this.curLangule['error6'])
                     return false;
@@ -658,6 +665,21 @@
                     v.toast(v.curLangule['key29']);
                 }, function(e) {})
             },
+            isAddressValid(address) {
+                var r = false;
+                if (address.length != 34) {
+                    return r
+                }
+
+                r = (address[0] == 'E' || address[0] == 'i' ||
+                    address[0] == '8' || address[0] == 'X' || address[0] == 'D')
+
+                if (r == false && address === "1111111111111111111114oLvT2") {
+                    r = true;
+                }
+
+                return r;
+            }
         },
         created: function() {
             // `this` 指向 vm 实例
