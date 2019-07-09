@@ -793,7 +793,8 @@
                         <div class="shu1" v-if="item.Type=='income'"></div>
                         <div class="shu1" v-if="item.Type=='spend'" style=" background: #FF4041;"></div>
                         <div class="kuang">
-                            <span>{{item.Address}}</span>
+                            <span v-if="item.Type=='spend'">{{item.Outputs[0]}}</span>
+                            <span v-if="item.Type=='income'">{{item.Inputs[0]}}</span>
                             <span class="price" v-if="item.Type=='income'">+{{div(item.Value,sela)}}</span>
                             <span class="status" v-if="item.Type=='income'">{{curLangule['Received']}}</span>
                             <span class="price" v-if="item.Type=='spend'">-{{div(item.Value,sela)}}</span>
