@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Receive</title>
+    <title>History</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <script src="https://cdn.bootcss.com/lodash.js/4.17.12-pre/lodash.min.js"></script>
     <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
@@ -288,7 +288,7 @@
         position: absolute;
         width: 59px;
         height: 20px;
-        right: 0px;
+        right: 12px;
         top: 5px;
         font-family: Bio Sans;
         font-size: 16px;
@@ -304,7 +304,7 @@
         position: absolute;
         width: 50px;
         height: 15px;
-        right: 0px;
+        right: 21px;
         top: 24px;
         font-family: Bio Sans;
         font-size: 12px;
@@ -823,6 +823,8 @@
                 key30: '下拉刷新',
                 key31: '',
                 key32: '加载中...',
+                key33: '没有更多数据',
+                key34: '上拉显示更多'
             },
             en: {
                 pending: 'pending',
@@ -833,7 +835,8 @@
                 key30: 'pull Refresh',
                 key31: '',
                 key32: 'loading...',
-
+                key33: 'No More Data',
+                key34: 'Pull-up Load More'
             },
             curLangule: {},
             curLanguleKey: 'zh',
@@ -842,10 +845,11 @@
             loading: true,
             sela: 100000000,
             minirefresh: null,
-            maxDataSize: 30,
-            requestDelayTime: 600,
-            counter: 0,
-            listData: []
+            listData: [],
+            pageSize: 20,
+            pageNum: 1,
+            noMoreData: '',
+            maxNum: 0,
         },
         methods: {
             mul: function(a, b) {
@@ -891,7 +895,7 @@
             getHistory(address) {
                 return new Promise((resovle, reject) => {
                     $.ajax({
-                        url: 'https://node1.elaphant.app/api/1/history/' + address,
+                        url: 'https://node1.elaphant.app/api/1/history/' + address + '?' + "pageSize=" + this.pageSize + '&pageNum=' + this.pageNum + '&order=desc',
                         dataType: 'json',
                         contentType: 'application/json',
                         type: 'GET',
@@ -969,14 +973,15 @@
             },
             downCallback: function() {
                 var self = this;
+                this.pageNum = 1;
                 this.getHistory(this.address).then((res) => {
                     this.loading = false;
                     if (res.status === 200) {
                         var items = res.result || {};
-                        this.list = res.result.History || [];
-                        this.listData = this.list;
+                        list = items.History || [];
+                        this.maxNum = items.TotalNum;
+                        this.listData = list;
                         self.miniRefresh.endDownLoading(true);
-                        //this.listData = [];
                     }
                 }).catch(() => {
                     this.loading = false;
@@ -985,26 +990,33 @@
                 });
             },
             upCallback: function() {
-
-            },
-            createTestData: function(count, isReset) {
-                if (isReset) {
-                    this.counter = 0;
+                var self = this;
+                if (this.maxNum > 0 && this.pageNum * this.pageSize >= this.maxNum) {
+                    this.miniRefresh.endUpLoading(true);
+                    this.loading = false;
+                    return;
                 }
+                this.getHistory(this.address).then((res) => {
+                    this.loading = false;
+                    if (res.status === 200) {
+                        var items = res.result || {};
+                        var list = res.result.History || [];
+                        this.maxNum = items.TotalNum;
+                        this.listData = this.listData.concat(list);
+                        if (this.pageNum * this.pageSize >= this.maxNum) {
+                            this.miniRefresh.endUpLoading(true);
+                            this.loading = false;
+                        } else {
+                            this.pageNum++;
+                            this.miniRefresh.endUpLoading(false);
+                            this.loading = false;
+                        }
+                    }
+                }).catch(() => {
+                    this.loading = false;
+                    this.miniRefresh.endDownLoading(true);
+                });
 
-                var res = [],
-                    dateStr = (new Date()).toLocaleString();
-
-                for (var i = 0; i < count; i++) {
-                    res.push({
-                        title: '测试第【' + this.counter + '】条新闻标题',
-                        date: dateStr
-                    });
-
-                    this.counter++;
-                }
-
-                return res;
             }
 
         },
@@ -1023,9 +1035,12 @@
                 },
                 up: {
                     // 默认没有锁定，可以通过API动态设置
-                    isLock: true,
+                    isLock: false,
                     // 是否自动上拉加载-初始化是是否自动
-                    isAuto: false,
+                    isAuto: true,
+                    contentdown: self.curLangule['key34'],
+                    contentrefresh: self.curLangule['key32'],
+                    contentnomore: self.curLangule['key33'],
                     loadFull: {
                         // 开启配置后，只要没满屏幕，就会自动加载
                         isEnable: false,
@@ -1039,18 +1054,6 @@
         created: function() {
             this.getLanugle();
             this.address = this.getUrlParam('Address');
-            this.getHistory(this.address).then((res) => {
-                this.loading = false;
-                if (res.status === 200) {
-                    var items = res.result || {};
-                    this.list = res.result.History || [];
-                    this.listData = this.list;
-                    //this.listData = [];
-                }
-            }).catch(() => {
-                this.loading = false;
-                this.listData = [];
-            });
         }
     });
 </script>
