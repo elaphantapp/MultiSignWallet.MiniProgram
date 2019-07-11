@@ -797,7 +797,7 @@
                             <span v-if="item.Type=='income'">{{item.Inputs[0]}}</span>
                             <span class="price" v-if="item.Type=='income'">+{{div(item.Value,sela)}}</span>
                             <span class="status" v-if="item.Type=='income'">{{curLangule['Received']}}</span>
-                            <span class="price" v-if="item.Type=='spend'">-{{div(item.Value,sela)}}</span>
+                            <span class="price" v-if="item.Type=='spend'">-{{jisuan(item.Value,item.Fee)}}</span>
                             <span class="status" v-if="item.Type=='spend'" style="color: #FF4041;">{{curLangule['Sent']}}</span>
                         </div>
                         <div class="kuang1">
@@ -853,6 +853,24 @@
             maxNum: 0,
         },
         methods: {
+            jisuan(val, fee) {
+                var tempFee = val - fee;
+                return this.div(tempFee, this.sela);
+            },
+            sub: function(a, b) {
+                var c, d, e;
+                try {
+                    c = a.toString().split(".")[1].length;
+                } catch (f) {
+                    c = 0;
+                }
+                try {
+                    d = b.toString().split(".")[1].length;
+                } catch (f) {
+                    d = 0;
+                }
+                return e = Math.pow(10, Math.max(c, d)), (this.mul(a, e) - this.mul(b, e)) / e;
+            },
             mul: function(a, b) {
                 var c = 0,
                     d = a.toString(),
