@@ -268,7 +268,8 @@
     .five p {
         width: 252px;
         word-wrap: break-word;
-        word-break: break-all;
+        word-break: normal;
+        white-space: normal;
         line-height: 17px;
     }
     
@@ -288,6 +289,24 @@
         display: flex;
         align-items: center;
         color: #000000;
+    }
+    
+    .first .hang textarea {
+        margin: 10px 0px;
+        padding-bottom: 5px;
+        display: inline-block;
+        width: 100%;
+        height: 17px;
+        font-family: Bio Sans;
+        font-size: 14px;
+        line-height: 17px;
+        align-items: center;
+        color: #DADADA;
+        border: 0;
+        outline: none;
+        border-bottom: 1px solid #DADADA;
+        resize: none;
+        vertical-align: middle;
     }
     
     .first .hang input {
@@ -354,36 +373,45 @@
         padding: 0 15px;
         max-width: 150px;
     }
+    
+    .bg {
+        height: 190px;
+        left: 0px;
+        top: 0px;
+        background: #0070C8;
+        box-shadow: 0px 2px 10px rgba(106, 147, 205, 0.1);
+        border-radius: 5px;
+    }
 </style>
 
 <body>
-    <div id="app">
+    <div id="app" class="bg">
         <div class="toast" v-show="toastShow">
             {{toastText}}
         </div>
         <div class="first">
             <p class="title">{{curLangule["key17"]}}</p>
             <div class="hang">
-                <span style="display:inline-block;width: 82%"><input :placeholder="curLangule['key18']" v-model="elaAdress"/></span>
+                <span style="display:inline-block;width: 82%"><textarea :placeholder="curLangule['key18']" v-model="elaAdress"></textarea></span>
                 <span style="display:inline-block;width: 15%" class="paste" v-on:click="doCopy">{{curLangule["key5"]}}</span>
             </div>
             <p class="title">{{curLangule["key19"]}}</p>
             <div class="hang">
-                <span style="display:inline-block;width: 60%"><input :placeholder="curLangule['key20']" v-model="amount" v-on:input="search" /></span>
+                <span style="display:inline-block;width: 60%"><input :placeholder="curLangule['key20']" v-model="amount" /></span>
                 <span style="display:inline-block;width: 37%">{{curLangule["key30"]}}：{{balance['num']}}</span>
             </div>
             <p class="title">{{curLangule["key21"]}}</p>
             <div class="hang">
                 <input :placeholder="curLangule['key22']" v-model="memo" />
             </div>
-            <p class="tip" v-if="amount>0&&fee['num']>0">{{curLangule["key23"]}}{{fee['num']}} ELA</p>
+            <p class="tip">{{curLangule["key23"]}}0.0000486 ELA</p>
         </div>
         <div class="four" v-on:click="send">
             <p>{{curLangule["key24"]}}</p>
         </div>
 
         <div class="five">
-            <p>2 {{curLangule["key25"]}} 3 {{curLangule["key26"]}}</p>
+            <p>{{walletList['requiredCount']}} {{curLangule["key25"]}} {{walletList["totalPublic"]}} {{curLangule["key26"]}}</p>
         </div>
     </div>
 </body>
@@ -456,6 +484,7 @@
             balance: {
                 'num': 0
             },
+            walletList: {}
         },
         methods: {
             getBalance(address) {
@@ -532,7 +561,8 @@
             buildMultiTx(tx) {
 
                 if (this.memo != "") {
-                    tx.Transactions[0].Memo = this.memo;
+                    var msg = "type:text,msg:";
+                    tx.Transactions[0].Memo = msg + this.memo;
                 }
                 var txJson = JSON.stringify(tx);
                 this.schemeConfig['Tx'] = txJson;
@@ -590,22 +620,22 @@
                 return null;
             },
             search() {
-                if (this.amount > 0) {
-                    this.getTx().then((res) => {
-                        if (res.status != 200) {
-                            this.$set(this.fee, 'num', 0);
-                            return;
-                        }
-                        var data = res.result || {};
-                        var Transactions = data.Transactions || [];
-                        var fee = this.div(Transactions[0].Fee, this.sela);
-                        this.$set(this.fee, 'num', fee);
-                    }).catch(() => {
+                // if (this.amount > 0) {
+                //     this.getTx().then((res) => {
+                //         if (res.status != 200) {
+                //             this.$set(this.fee, 'num', 0);
+                //             return;
+                //         }
+                //         var data = res.result || {};
+                //         var Transactions = data.Transactions || [];
+                //         var fee = this.div(Transactions[0].Fee, this.sela);
+                //         this.$set(this.fee, 'num', fee);
+                //     }).catch(() => {
 
-                    });
-                } else {
-                    this.$set(this.fee, 'num', 0);
-                }
+                //     });
+                // } else {
+                //     this.$set(this.fee, 'num', 0);
+                // }
             },
             div: function(a, b) {
                 var c, d, e = 0,
@@ -684,6 +714,8 @@
         created: function() {
             // `this` 指向 vm 实例
             this.address = this.getUrlParam("Address");
+            var walletList = localStorage.getItem('ELA-Multi-sig-Wallet') || "";
+            this.walletList = JSON.parse(walletList)[this.address];
             this.getBalance(this.address).then((res) => {
                 if (res.status === 200) {
                     this.$set(this.balance, 'num', res.result);
