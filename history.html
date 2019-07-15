@@ -305,7 +305,7 @@
         /* width: 50px; */
         height: 15px;
         right: 5px;
-        top: 24px;
+        top: 28px;
         font-family: Bio Sans;
         font-size: 12px;
         line-height: 15px;
@@ -770,6 +770,18 @@
         border-radius: 20px;
         color: #FF6990;
     }
+    
+    .memo {
+        position: absolute;
+        left: 0px;
+        top: 13px;
+    }
+    
+    .address {
+        position: absolute;
+        left: 0px;
+        top: -7px;
+    }
 </style>
 
 <body>
@@ -793,8 +805,9 @@
                         <div class="shu1" v-if="item.Type=='income'"></div>
                         <div class="shu1" v-if="item.Type=='spend'" style=" background: #FF4041;"></div>
                         <div class="kuang">
-                            <span v-if="item.Type=='spend'">{{handleAdress(item.Outputs[0])}}</span>
-                            <span v-if="item.Type=='income'">{{handleAdress(item.Inputs[0])}}</span>
+                            <span class="address" v-if="item.Type=='spend'">{{handleAdress(item.Outputs[0])}}</span>
+                            <span class="address" v-if="item.Type=='income'">{{handleAdress(item.Inputs[0])}}</span>
+                            <span class="memo">{{handleMemo(item)}}</span>
                             <span class="price" v-if="item.Type=='income'">+{{div(item.Value,sela)}}</span>
                             <span class="status" v-if="item.Type=='income'">{{curLangule['Received']}}</span>
                             <span class="price" v-if="item.Type=='spend'">-{{jisuan(item.Value,item.Fee)}}</span>
@@ -853,6 +866,13 @@
             maxNum: 0,
         },
         methods: {
+            handleMemo(item) {
+                var memo = item["Memo"] || "";
+                if (memo.indexOf("type:text,msg:") > -1) {
+                    memo = memo.substring(14);
+                }
+                return memo;
+            },
             handleAdress(address) {
                 return address.substring(0, 5) + "...." + address.substring(address.length - 6, address.length);
             },
