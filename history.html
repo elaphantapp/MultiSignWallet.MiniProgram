@@ -286,9 +286,9 @@
     
     .first .kuang .price {
         position: absolute;
-        width: 59px;
+        /* width: 59px; */
         height: 20px;
-        right: 12px;
+        right: 0px;
         top: 5px;
         font-family: Bio Sans;
         font-size: 16px;
@@ -302,9 +302,9 @@
     
     .first .kuang .status {
         position: absolute;
-        width: 50px;
+        /* width: 50px; */
         height: 15px;
-        right: 21px;
+        right: 5px;
         top: 24px;
         font-family: Bio Sans;
         font-size: 12px;
@@ -793,8 +793,8 @@
                         <div class="shu1" v-if="item.Type=='income'"></div>
                         <div class="shu1" v-if="item.Type=='spend'" style=" background: #FF4041;"></div>
                         <div class="kuang">
-                            <span v-if="item.Type=='spend'">{{item.Outputs[0]}}</span>
-                            <span v-if="item.Type=='income'">{{item.Inputs[0]}}</span>
+                            <span v-if="item.Type=='spend'">{{handleAdress(item.Outputs[0])}}</span>
+                            <span v-if="item.Type=='income'">{{handleAdress(item.Inputs[0])}}</span>
                             <span class="price" v-if="item.Type=='income'">+{{div(item.Value,sela)}}</span>
                             <span class="status" v-if="item.Type=='income'">{{curLangule['Received']}}</span>
                             <span class="price" v-if="item.Type=='spend'">-{{jisuan(item.Value,item.Fee)}}</span>
@@ -847,12 +847,15 @@
             sela: 100000000,
             minirefresh: null,
             listData: [],
-            pageSize: 20,
+            pageSize: 10,
             pageNum: 1,
             noMoreData: '',
             maxNum: 0,
         },
         methods: {
+            handleAdress(address) {
+                return address.substring(0, 5) + "...." + address.substring(address.length - 6, address.length);
+            },
             jisuan(val, fee) {
                 var tempFee = val - fee;
                 return this.div(tempFee, this.sela);
@@ -992,6 +995,12 @@
             },
             downCallback: function() {
                 var self = this;
+
+                // if (this.maxNum > 0 && this.pageNum * this.pageSize >= this.maxNum) {
+                //     this.miniRefresh.endDownLoading(true);
+                //     this.loading = false;
+                //     return;
+                // }
                 this.pageNum = 1;
                 this.getHistory(this.address).then((res) => {
                     this.loading = false;
@@ -1000,6 +1009,7 @@
                         list = items.History || [];
                         this.maxNum = items.TotalNum;
                         this.listData = list;
+                        this.pageNum++;
                         self.miniRefresh.endDownLoading(true);
                     }
                 }).catch(() => {
@@ -1010,7 +1020,7 @@
             },
             upCallback: function() {
                 var self = this;
-                if (this.maxNum > 0 && this.pageNum * this.pageSize >= this.maxNum) {
+                if (this.maxNum > 0 && this.listData.length >= this.maxNum) {
                     this.miniRefresh.endUpLoading(true);
                     this.loading = false;
                     return;
@@ -1021,11 +1031,11 @@
                         var items = res.result || {};
                         var list = res.result.History || [];
                         this.maxNum = items.TotalNum;
-                        this.listData = this.listData.concat(list);
-                        if (this.pageNum * this.pageSize >= this.maxNum) {
+                        if (this.listData.length >= this.maxNum) {
                             this.miniRefresh.endUpLoading(true);
                             this.loading = false;
                         } else {
+                            this.listData = this.listData.concat(list);
                             this.pageNum++;
                             this.miniRefresh.endUpLoading(false);
                             this.loading = false;

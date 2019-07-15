@@ -411,7 +411,8 @@
         </div>
 
         <div class="five">
-            <p>{{walletList['requiredCount']}} {{curLangule["key25"]}} {{walletList["totalPublic"]}} {{curLangule["key26"]}}</p>
+            <p v-if="curLanguleKey ==='zh'">需要至少{{walletList['requiredCount']}}个(一共{{walletList["totalPublic"]}}个) 批准才可以完成这笔花费</p>
+            <p v-if="curLanguleKey ==='en'">{{walletList['requiredCount']}} out of {{walletList["totalPublic"]}} approvals are required to complete this transaction.</p> -->
         </div>
     </div>
 </body>
