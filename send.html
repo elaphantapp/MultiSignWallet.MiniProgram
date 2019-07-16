@@ -371,7 +371,7 @@
         height: 45px;
         line-height: 45px;
         padding: 0 15px;
-        max-width: 150px;
+        width: 200px;
     }
     
     .bg {
@@ -412,7 +412,7 @@
 
         <div class="five">
             <p v-if="curLanguleKey ==='zh'">需要至少{{walletList['requiredCount']}}个(一共{{walletList["totalPublic"]}}个) 批准才可以完成这笔花费</p>
-            <p v-if="curLanguleKey ==='en'">{{walletList['requiredCount']}} out of {{walletList["totalPublic"]}} approvals are required to complete this transaction.</p> -->
+            <p v-if="curLanguleKey ==='en'">{{walletList['requiredCount']}} out of {{walletList["totalPublic"]}} approvals are required to complete this transaction.</p>
         </div>
     </div>
 </body>
@@ -438,6 +438,7 @@
                 error7: '请输入正确的金额',
                 error8: '余额不足',
                 error9: '地址不合法',
+                error10: 'Memo 不能超过250字节',
                 key29: '复制成功',
                 key30: '余额',
             },
@@ -453,11 +454,12 @@
                 key24: 'Send',
                 key25: 'out of',
                 key26: 'approvals are required to complete this transaction.',
-                error5: 'Please Enter ELA receive address',
-                error6: 'Please Amount of ELA',
+                error5: 'Please enter ELA receive address',
+                error6: 'Please enter the amount of ELA',
                 error7: 'Wrong Amount',
                 error8: 'The balance is not enough',
                 error9: 'Illegal address',
+                error10: "Memo can't be more than 250 bytes",
                 key29: 'Copy Success',
                 key30: 'Balance',
 
@@ -472,7 +474,7 @@
                 "ReturnUrl": "",
             },
             curLanguleKey: 'zh',
-            elaAdress: "EYf3wvaiNHWvrEXL1bwSV5LytbhiPb6Vby",
+            elaAdress: "",
             amount: "",
             memo: "",
             fee: {
@@ -488,6 +490,9 @@
             walletList: {}
         },
         methods: {
+            getLen2(str) {　　　　 //将中文替换成两个英文字符来统计
+                return str.replace(/[^\x00-\xff]/g, "aa").length;
+            },
             getBalance(address) {
                 return new Promise((resovle, reject) => {
                     $.ajax({
@@ -681,6 +686,11 @@
 
                 if (this.amount.toString().indexOf(".") > -1 && this.amount.toString().split(".")[1].length > 8) {
                     this.toast(this.curLangule['error7'])
+                    return false;
+                }
+
+                if (this.getLen2(this.memo) >= 250) {
+                    this.toast(this.curLangule['error10'])
                     return false;
                 }
 

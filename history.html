@@ -297,7 +297,7 @@
         display: flex;
         align-items: center;
         text-align: right;
-        color: #666666;
+        color: #0070C8;
     }
     
     .first .kuang .status {
@@ -775,12 +775,34 @@
         position: absolute;
         left: 0px;
         top: 13px;
+        font-size: 12px;
+        color: #999999;
     }
     
     .address {
         position: absolute;
         left: 0px;
         top: -7px;
+    }
+    
+    .dialog {
+        width: 100%;
+        height: 360px;
+        bottom: 0;
+        left: 0;
+        position: absolute;
+    }
+    
+    .arrow_mask {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        z-index: -1;
+        display: block;
+        background: black;
+        opacity: 0.7;
     }
 </style>
 
@@ -808,9 +830,9 @@
                             <span class="address" v-if="item.Type=='spend'">{{handleAdress(item.Outputs[0])}}</span>
                             <span class="address" v-if="item.Type=='income'">{{handleAdress(item.Inputs[0])}}</span>
                             <span class="memo">{{handleMemo(item)}}</span>
-                            <span class="price" v-if="item.Type=='income'">+{{div(item.Value,sela)}}</span>
+                            <span class="price" v-if="item.Type=='income'">+{{scientificToNumber(div(item.Value,sela))}}</span>
                             <span class="status" v-if="item.Type=='income'">{{curLangule['Received']}}</span>
-                            <span class="price" v-if="item.Type=='spend'">-{{jisuan(item.Value,item.Fee)}}</span>
+                            <span class="price" v-if="item.Type=='spend'">-{{scientificToNumber(jisuan(item.Value,item.Fee))}}</span>
                             <span class="status" v-if="item.Type=='spend'" style="color: #FF4041;">{{curLangule['Sent']}}</span>
                         </div>
                         <div class="kuang1">
@@ -821,6 +843,11 @@
                 </div>
             </div>
         </div>
+
+        <!-- <div class="dialog">
+            <div class="arrow_mask" v-on:=click_close()></div>
+            <div class="kuang"></div>
+        </div> -->
     </div>
 </body>
 <script>
@@ -864,12 +891,39 @@
             pageNum: 1,
             noMoreData: '',
             maxNum: 0,
+            showMask: true
         },
         methods: {
+            click_close() {
+
+            },
+            scientificToNumber(num) {
+                let str = num.toString();
+                let reg = /^(\d+)(e)([\-]?\d+)$/;
+                let arr, len,
+                    zero = '';
+
+                /*6e7或6e+7 都会自动转换数值*/
+                if (!reg.test(str)) {
+                    return num;
+                } else {
+                    /*6e-7 需要手动转换*/
+                    arr = reg.exec(str);
+                    len = Math.abs(arr[3]) - 1;
+                    for (var i = 0; i < len; i++) {
+                        zero += '0';
+                    }
+
+                    return '0.' + zero + arr[1];
+                }
+            },
             handleMemo(item) {
                 var memo = item["Memo"] || "";
                 if (memo.indexOf("type:text,msg:") > -1) {
                     memo = memo.substring(14);
+                }
+                if (memo.length > 30) {
+                    memo = memo.substring(0, 31) + "......";
                 }
                 return memo;
             },
