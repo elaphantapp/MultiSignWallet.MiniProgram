@@ -811,7 +811,7 @@
     .kuang2 {
         position: absolute;
         width: 340px;
-        height: 400px;
+        /* height: 400px; */
         left: 50%;
         top: 50%;
         margin-left: -170px;
@@ -997,7 +997,7 @@
                     <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABYAAAAWCAYAAADEtGw7AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAADLSURBVHgB7ZOxDQIhFIaBhtA5giO4ghs4wo2gJZVYUeoIN4IbuIIjOIIdoQH5TUgu5D295ky83N/c8T/+L/AAIRb9rSRleu/X5dPFGC/OuSc1p/grY0yXUrpaax9tXVEhpdROSnnUWt8AoKCo5ZzPWADJoMwQQl9C9wLftPAKRQ1zsCuKQbaCAWzhtx7XKhZMwd+BEdCv4BaO8RgopMRE+n0rJjk8CloBn2pDkT0uwT0XxD+8es/x+igGd3h9CR241QzgJzxpsWheegEfssESO4AuEAAAAABJRU5ErkJggg=="
                     /></div>
                 <div class="leixing" v-if="curItem.Type=='spend'">{{curLangule['Sent']}}</div>
-                <div class="leixing" v-if="curItem.Type=='income'">{{curLangule['Received']}}</div>
+                <div class="leixing" v-if="curItem.Type=='income'" style="color: #24CF94;">{{curLangule['Received']}}</div>
                 <div class="price" v-if="curItem.Type=='spend'">-{{scientificToNumber(jisuan(curItem.Value,curItem.Fee))}} ELA</div>
                 <div class="price" v-if="curItem.Type=='income'">+{{scientificToNumber(div(curItem.Value,sela))}} ELA</div>
                 <div class="line"></div>
@@ -1007,7 +1007,8 @@
                     <span class="content">{{dateFormat(new Date(curItem.CreateTime*1000),'yyyy-MM-dd HH:mm:ss')}}</span>
                 </div>
                 <div class="hang1">
-                    <span class="shuoming">{{curLangule["key36"]}}</span>
+                    <span class="shuoming" v-if="curItem.Type=='spend'">{{curLangule["key36"]}}</span>
+                    <span class="shuoming" v-if="curItem.Type=='income'">{{curLangule["key43"]}}</span>
                     <span class="content" v-if="curItem.Type=='spend'" v-on:click="doCopy(curItem.Outputs[0])">{{curItem.Outputs[0]}}</span>
                     <span class="content" v-if="curItem.Type=='income'" v-on:click="doCopy(curItem.Inputs[0])">{{curItem.Inputs[0]}}</span>
                 </div>
@@ -1015,11 +1016,11 @@
                     <span class="shuoming">{{curLangule["key37"]}}</span>
                     <span class="content">{{ handleMemo1(curItem)}}</span>
                 </div>
-                <div class="hang1">
+                <div class="hang1" v-if="curItem.Type=='spend'">
                     <span class="shuoming">{{curLangule["key38"]}}</span>
                     <span class="content">{{scientificToNumber(div(curItem.Fee,sela))}} ELA</span>
                 </div>
-                <div class="hang1">
+                <div class="hang1" v-if="curItem.Type=='spend'">
                     <span class="shuoming">{{curLangule["key39"]}}</span>
                     <span class="content">{{scientificToNumber(div(curItem.Value,sela))}} ELA</span>
                 </div>
@@ -1032,6 +1033,7 @@
                     <span class="shuoming">{{curLangule["key41"]}}</span>
                     <span class="content" style="font-size: 10px" v-on:click="doCopy(curItem.Txid)">{{handleTxid(curItem.Txid)}}</span>
                 </div>
+                <div class="line"></div>
                 <!-- <div class="">
 
                 </div>
@@ -1057,13 +1059,14 @@
                 key33: '没有更多数据',
                 key34: '上拉显示更多',
                 key35: '完成',
-                key36: '通过',
+                key36: '至',
                 key37: '备忘录',
                 key38: '网络费',
                 key39: '费用总计',
                 key40: '确认块',
                 key41: '交易ID',
-                key42: '复制成功'
+                key42: '复制成功',
+                key43: '通过'
             },
             en: {
                 pending: 'pending',
@@ -1083,7 +1086,8 @@
                 key39: 'Total Cost',
                 key40: 'Confirmed in Block',
                 key41: 'Transaction ID',
-                key42: 'Copy Success'
+                key42: 'Copy Success',
+                key43: 'Via'
             },
             curLangule: {},
             curLanguleKey: 'zh',

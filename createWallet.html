@@ -435,7 +435,7 @@
                         <span class="jianhao">-</span>
                     </div>
                     <div class="fl" style="width:90%;height:48px;line-height: 48px">
-                        <textarea class="tr" :placeholder="curLangule['key6']">{{item}}
+                        <textarea class="tr" :placeholder="curLangule['key6']" v-model="publickeyArr[index]">
                                         </textarea>
                     </div>
                 </div>
@@ -452,7 +452,7 @@
                     <span>+</span>
                 </div>
                 <div class="fl" style="width:90%;height:48px;line-height: 48px">
-                    <textarea class="tr" placeholder="Add public key" v-model="spublic">
+                    <textarea class="tr" :placeholder="curLangule['key6']" v-model="spublic">
                             </textarea>
                 </div>
             </div>
@@ -641,6 +641,10 @@
                 }
             },
             jiahao() {
+                if (this.publickeyArr.length == 0) {
+                    this.schemeConfig['RequiredCount'] = 2;
+                    return;
+                }
                 if (this.schemeConfig['RequiredCount'] === this.publickeyArr.length) {
                     this.schemeConfig['RequiredCount'] = this.publickeyArr.length;
                 } else {
@@ -665,6 +669,10 @@
                 //     this.toast(this.curLangule['error3']);
                 //     return false;
                 // }
+                if (this.publickeyArr.indexOf("") > -1) {
+                    this.toast(this.curLangule['key6']);
+                    return false;
+                }
 
                 if (this.publickeyArr.length < 2) {
                     this.toast(this.curLangule['key6']);

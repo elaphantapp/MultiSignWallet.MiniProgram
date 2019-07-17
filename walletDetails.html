@@ -418,10 +418,106 @@
         box-shadow: 0px 2px 10px rgba(106, 147, 205, 0.1);
         border-radius: 5px;
     }
+    
+    .dialog {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        left: 0px;
+        top: 0px;
+        z-index: 999;
+    }
+    
+    .arrow_mask {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        z-index: 998;
+        display: block;
+        background: black;
+        opacity: 0.3;
+        box-shadow: 0px 4px 10px rgba(95, 111, 237, 0.2);
+    }
+    
+    .kuang {
+        position: absolute;
+        width: 300px;
+        height: 160px;
+        left: 50%;
+        top: 50%;
+        margin-left: -150px;
+        margin-top: -80px;
+        background: #FFFFFF;
+        box-shadow: 0px 2px 10px rgba(106, 147, 205, 0.1);
+        border-radius: 5px;
+        z-index: 999;
+    }
+    
+    .kuang .title {
+        margin-top: 10px;
+        text-align: center;
+        font-size: 18px;
+    }
+    
+    .kuang .content {
+        padding: 10px;
+        height: 65px;
+        overflow: auto;
+        line-height: 25px;
+        font-size: 16px;
+        word-wrap: break-word;
+        word-break: normal;
+        white-space: normal;
+    }
+    
+    .kuang .footer {
+        position: relative;
+    }
+    
+    .kuang .footer .left-btn {
+        position: absolute;
+        width: 120px;
+        height: 40px;
+        left: 10px;
+        line-height: 40px;
+        text-align: center;
+        border-radius: 5px;
+        font-size: 16px;
+        display: inline-block;
+        background-color: #0070C8;
+        color: #ffffff;
+    }
+    
+    .kuang .footer .right-btn {
+        position: absolute;
+        width: 120px;
+        height: 40px;
+        right: 10px;
+        line-height: 40px;
+        text-align: center;
+        border-radius: 5px;
+        font-size: 16px;
+        display: inline-block;
+        background-color: #0070C8;
+        color: #ffffff;
+    }
 </style>
 
 <body>
     <div id="app" class="bg">
+        <div class="dialog" v-if="showMask">
+            <div class="arrow_mask" v-on:click="click_close"></div>
+            <div class="kuang">
+                <div class="title">{{curLangule["key45"]}}</div>
+                <div class="content">{{curLangule["key48"]}}</div>
+                <div class="footer">
+                    <span class="left-btn" v-on:click="click_ok">{{curLangule["key47"]}}</span>
+                    <span class="right-btn" v-on:click="click_close">{{curLangule["key46"]}}</span>
+                </div>
+            </div>
+        </div>
         <div class="toast" v-show="toastShow">
             {{toastText}}
         </div>
@@ -476,7 +572,11 @@
                 key15: '接收',
                 key16: '删除这个钱包',
                 key29: '复制成功',
-                error4: '余额不足，请充值'
+                error4: '余额不足，请充值',
+                key45: "确认框",
+                key46: "取消",
+                key47: "确认",
+                key48: "你确定删除这个钱包吗？",
             },
             en: {
                 key7: 'Total public keys:',
@@ -489,7 +589,11 @@
                 key15: 'Receive',
                 key16: 'Delete this wallet',
                 key29: 'Copy Success',
-                error4: 'The balance is not enough'
+                error4: 'The balance is not enough',
+                key45: "Confirm",
+                key46: "Cancel",
+                key47: "Confirm",
+                key48: "Are you sure to delete this wallet?",
             },
             curLangule: {},
             curLanguleKey: 'zh',
@@ -506,9 +610,20 @@
                 'num': 0
             },
             toastShow: false,
-            toastText: ''
+            toastText: '',
+            showMask: false
         },
         methods: {
+            click_ok() {
+                var obj = JSON.parse(localStorage.getItem("ELA-Multi-sig-Wallet"));
+                delete obj[this.wallet['Address']];
+                localStorage.setItem('ELA-Multi-sig-Wallet', JSON.stringify(obj));
+                location.href = 'walletList.html';
+                this.showMask = false;
+            },
+            click_close() {
+                this.showMask = false;
+            },
             getLanugle: function() {
                 this.curLangule = this.en;
                 this.curLanguleKey = 'en';
@@ -535,10 +650,7 @@
                 location.href = 'receive.html?Address=' + this.wallet['Address'];
             },
             del() {
-                var obj = JSON.parse(localStorage.getItem("ELA-Multi-sig-Wallet"));
-                delete obj[this.wallet['Address']];
-                localStorage.setItem('ELA-Multi-sig-Wallet', JSON.stringify(obj));
-                location.href = 'walletList.html';
+                this.showMask = true;
             },
             histroy() {
                 location.href = 'history.html?Address=' + this.wallet['Address'];
