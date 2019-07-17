@@ -5,8 +5,8 @@
     <meta charset="utf-8">
     <title></title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
     <script src="./js/vue-clipboard.min.js"></script>
 </head>
 <style type="text/css">
@@ -503,10 +503,17 @@
         background-color: #0070C8;
         color: #ffffff;
     }
+    
+    [v-cloak] {
+        display: none;
+    }
 </style>
 
 <body>
-    <div id="app" class="bg">
+    <div id="app" class="bg" v-cloak>
+        <div class="toast" v-show="toastShow">
+            {{toastText}}
+        </div>
         <div class="dialog" v-if="showMask">
             <div class="arrow_mask" v-on:click="click_close"></div>
             <div class="kuang">
@@ -517,9 +524,6 @@
                     <span class="left-btn" v-on:click="click_close">{{curLangule["key46"]}}</span>
                 </div>
             </div>
-        </div>
-        <div class="toast" v-show="toastShow">
-            {{toastText}}
         </div>
         <div class="histroy" v-on:click="histroy">
             <p>{{curLangule['key13']}}<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABEAAAAdCAYAAABMr4eBAAAACXBIWXMAABYlAAAWJQFJUiTwAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAADlSURBVHgBrdXRDcIgEAbggxugdANMF3ADdQM3MG7iKN1AncD0yUcn6IMT1Alaj6Y1tdKW4/wTkoPAF0ICAPwz1loDkcEOsFrre5qmpqqqApjBDrg5i9qWIOBCSIvOSqn1YIwNoTGmIGRPtYmF8EVJkuQqgdqDlULYFxIIh51YCMcDMRD6ZC7kRbjQJMKBZpFQSEFgujv2GEEuJx1oACJuPADQDp9BO8my7NA0Te4BjmVZ5ovIEtDWUmAWCQUmEQ7gRbjADxIDfCGxwAeRAO08KeCi67reSQAX99pf6NtY9X8PF3B5A/GwyEGX+RAjAAAAAElFTkSuQmCC"
@@ -801,8 +805,9 @@
 
             // this.getLanugle();
         },
-        mounted() {
+        mounted: function() {
             // `this` 指向 vm 实例
+            this.getLanugle();
             var item = this.getUrlParam("Data") || "";
 
             if (item != "") {
@@ -842,8 +847,6 @@
                 document.title = this.wallet['name'];
                 this.publickeyArr = this.wallet['PublicKeys'].split(',');
             }
-
-            this.getLanugle();
         }
     });
 </script>

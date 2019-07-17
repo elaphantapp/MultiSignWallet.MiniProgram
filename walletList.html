@@ -288,7 +288,7 @@
         font-size: 12px;
         color: #FFFFFF;
         left: 50px;
-        top: 69px;
+        top: 78px;
     }
     
     .list .tip {
@@ -337,10 +337,14 @@
         right: 0px;
         bottom: 0px;
     }
+    
+    [v-cloak] {
+        display: none;
+    }
 </style>
 
 <body>
-    <div id="app">
+    <div id="app" v-cloak>
         <div class="shuoming">
             {{curLangule["key"]}}
         </div>

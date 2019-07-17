@@ -950,10 +950,14 @@
         padding: 0 15px;
         width: 200px;
     }
+    
+    [v-cloak] {
+        display: none;
+    }
 </style>
 
 <body>
-    <div class="content">
+    <div class="content" v-cloak>
         <div class="spinner" v-if="loading">
 
             <div class="bounce1"></div>
