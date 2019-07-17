@@ -5,10 +5,6 @@
     <meta charset="utf-8">
     <title>Send</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
-    <script src="https://cdn.bootcss.com/lodash.js/4.17.12-pre/lodash.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
-    <script src="./js/vue-clipboard.min.js"></script>
 </head>
 <style type="text/css">
     .fl {
@@ -386,8 +382,8 @@
 
 <body>
     <div id="app" class="bg">
-        <div class="toast" v-show="toastShow">
-            {{toastText}}
+        <div class="toast" v-show="toastShow" v-text="toastText">
+            <!-- {{toastText}} -->
         </div>
         <div class="first">
             <p class="title">{{curLangule["key17"]}}</p>
@@ -416,6 +412,10 @@
         </div>
     </div>
 </body>
+<script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.js"></script>
+<script src="https://cdn.bootcss.com/lodash.js/4.17.12-pre/lodash.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+<script src="./js/vue-clipboard.min.js"></script>
 <script>
     var app = new Vue({
         el: '#app',
@@ -722,8 +722,9 @@
                 return r;
             }
         },
-        created: function() {
+        mounted: function() {
             // `this` 指向 vm 实例
+            this.getLanugle();
             this.address = this.getUrlParam("Address");
             var walletList = localStorage.getItem('ELA-Multi-sig-Wallet') || "";
             this.walletList = JSON.parse(walletList)[this.address];
@@ -735,7 +736,7 @@
                 }
 
             });
-            this.getLanugle();
+
         }
     });
 </script>

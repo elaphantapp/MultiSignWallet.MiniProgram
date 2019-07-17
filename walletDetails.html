@@ -513,8 +513,8 @@
                 <div class="title">{{curLangule["key45"]}}</div>
                 <div class="content">{{curLangule["key48"]}}</div>
                 <div class="footer">
-                    <span class="left-btn" v-on:click="click_ok">{{curLangule["key47"]}}</span>
-                    <span class="right-btn" v-on:click="click_close">{{curLangule["key46"]}}</span>
+                    <span class="right-btn" v-on:click="click_ok">{{curLangule["key47"]}}</span>
+                    <span class="left-btn" v-on:click="click_close">{{curLangule["key46"]}}</span>
                 </div>
             </div>
         </div>
@@ -758,6 +758,50 @@
             }
         },
         created: function() {
+            // `this` 指向 vm 实例
+            // var item = this.getUrlParam("Data") || "";
+
+            // if (item != "") {
+            //     var mdata = decodeURIComponent(item);
+            //     var json = JSON.parse(mdata);
+            //     this.wallet['Address'] = json.Address;
+            // } else {
+            //     this.wallet['Address'] = this.getUrlParam("Address");
+            // }
+
+            // this.getBalance(this.wallet['Address']).then((res) => {
+            //     if (res.status === 200) {
+            //         this.$set(this.balance, 'num', res.result);
+            //     } else {
+            //         this.$set(this.balance, 'num', 0);
+            //     }
+
+            // });
+            // var walletList = localStorage.getItem('ELA-Multi-sig-Wallet') || "";
+            // if (walletList === "") {
+            //     walletList = {};
+            // } else {
+            //     walletList = JSON.parse(walletList);
+            // }
+            // if (!walletList[this.wallet['Address']]) {
+            //     this.wallet['createTime'] = this.dateFormat(new Date(), 'HH:mm:ss yyyy-MM-dd');
+            //     this.wallet['requiredCount'] = this.getUrlParam('requiredCount');
+            //     this.wallet['name'] = this.getUrlParam('name');
+            //     document.title = this.wallet['name'];
+            //     this.wallet['PublicKeys'] = this.getUrlParam('PublicKeys');
+            //     this.publickeyArr = this.wallet['PublicKeys'].split(',');
+            //     this.wallet["totalPublic"] = this.publickeyArr.length;
+            //     walletList[this.wallet['Address']] = this.wallet;
+            //     localStorage.setItem('ELA-Multi-sig-Wallet', JSON.stringify(walletList));
+            // } else {
+            //     this.wallet = walletList[this.wallet['Address']];
+            //     document.title = this.wallet['name'];
+            //     this.publickeyArr = this.wallet['PublicKeys'].split(',');
+            // }
+
+            // this.getLanugle();
+        },
+        mounted() {
             // `this` 指向 vm 实例
             var item = this.getUrlParam("Data") || "";
 

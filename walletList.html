@@ -416,6 +416,15 @@
         },
         created: function() {
             // `this` 指向 vm 实例
+            // var walletList = localStorage.getItem('ELA-Multi-sig-Wallet') || "";
+            // if (walletList === "") {
+            //     this.walletList = {};
+            // } else {
+            //     this.walletList = JSON.parse(walletList);
+            // }
+            // this.getLanugle();
+        },
+        mounted() {
             var walletList = localStorage.getItem('ELA-Multi-sig-Wallet') || "";
             if (walletList === "") {
                 this.walletList = {};
