@@ -811,11 +811,11 @@
     .kuang2 {
         position: absolute;
         width: 340px;
-        height: 460px;
+        height: 400px;
         left: 50%;
         top: 50%;
         margin-left: -170px;
-        margin-top: -230px;
+        margin-top: -200px;
         background: #FFFFFF;
         box-shadow: 0px 2px 10px rgba(106, 147, 205, 0.1);
         border-radius: 5px;
@@ -892,32 +892,42 @@
         position: relative;
         padding: 10px 0px;
         width: 307px;
-        height: 80px;
+        height: 30px;
         margin: 0 auto;
         border-bottom: 1px solid #C4C4C4;
     }
     
     .kuang2 .hang2 .shuoming {
-        padding: 10 0px;
+        /* padding: 10 0px; */
         width: 50px;
         float: left;
         font-family: Bio Sans;
         font-size: 12px;
         color: #888888;
-        height: 80px;
-        line-height: 80px;
+        height: 40px;
+        line-height: 40px;
     }
     
     .kuang2 .hang2 .content {
+        margin-top: 2px;
         float: left;
         width: 249px;
-        height: 80px;
+        height: 40px;
         font-family: Bio Sans;
         font-size: 14px;
         text-align: right;
         color: #222222;
         overflow: auto;
         text-align: left;
+    }
+    
+    .btn {
+        height: 80px;
+        line-height: 80px;
+        font-family: Bio Sans;
+        font-size: 16px;
+        text-align: center;
+        color: #0070C8;
     }
     
     .toast {
@@ -1001,6 +1011,10 @@
                     <span class="content" v-if="curItem.Type=='spend'" v-on:click="doCopy(curItem.Outputs[0])">{{curItem.Outputs[0]}}</span>
                     <span class="content" v-if="curItem.Type=='income'" v-on:click="doCopy(curItem.Inputs[0])">{{curItem.Inputs[0]}}</span>
                 </div>
+                <div class="hang2">
+                    <span class="shuoming">{{curLangule["key37"]}}</span>
+                    <span class="content">{{ handleMemo1(curItem)}}</span>
+                </div>
                 <div class="hang1">
                     <span class="shuoming">{{curLangule["key38"]}}</span>
                     <span class="content">{{scientificToNumber(div(curItem.Fee,sela))}} ELA</span>
@@ -1018,11 +1032,10 @@
                     <span class="shuoming">{{curLangule["key41"]}}</span>
                     <span class="content" style="font-size: 10px" v-on:click="doCopy(curItem.Txid)">{{handleTxid(curItem.Txid)}}</span>
                 </div>
+                <!-- <div class="">
 
-                <div class="hang2">
-                    <span class="shuoming">{{curLangule["key37"]}}</span>
-                    <span class="content">{{ handleMemo1(curItem)}}</span>
                 </div>
+                <div class="btn" v-on:click="showDetails()"> Show Details</div> -->
             </div>
         </div>
     </div>
@@ -1087,9 +1100,13 @@
             showMask: false,
             curItem: {},
             toastShow: false,
-            toastText: ''
+            toastText: '',
+            isShow: false
         },
         methods: {
+            showDetails() {
+
+            },
             toast(str) {
                 var v = this;
                 v.toastText = str
