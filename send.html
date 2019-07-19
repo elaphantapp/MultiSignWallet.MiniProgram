@@ -576,7 +576,7 @@
                 }
                 var txJson = JSON.stringify(tx);
                 this.schemeConfig['Tx'] = txJson;
-                this.schemeConfig['ReturnUrl'] = 'http://dev1.elapps.net/history.html?' + 'Address=' + this.address;
+                this.schemeConfig['ReturnUrl'] = 'https://multisignwallet.elaphant.app/history.html?' + 'Address=' + this.address;
                 var url = "elaphant://multitx?";
                 var that = this;
                 _.forEach(this.schemeConfig, function(val, key, index) {

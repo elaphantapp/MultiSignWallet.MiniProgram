@@ -577,7 +577,7 @@
             createWallet() {
                 if (this.checkParms()) {
                     var publicKeys = this.publickeyArr.join(",");
-                    this.schemeConfig['ReturnUrl'] = 'http://dev1.elapps.net/walletDetails.html?' + 'name=' + this.walletName + '&' + 'requiredCount=' + this.schemeConfig['RequiredCount'] + '&' + 'PublicKeys=' + publicKeys;
+                    this.schemeConfig['ReturnUrl'] = 'https://multisignwallet.elaphant.app/walletDetails.html?' + 'name=' + this.walletName + '&' + 'requiredCount=' + this.schemeConfig['RequiredCount'] + '&' + 'PublicKeys=' + publicKeys;
                     var url = this.buildMultiCreate();
                     var turl = 'https://elephantwallet.app/redirect?appName=ELA Multi-sig Wallet&appTitle=ELA Multi-sig Wallet&redirectURL=' + encodeURIComponent(url);
                     location.href = turl;
