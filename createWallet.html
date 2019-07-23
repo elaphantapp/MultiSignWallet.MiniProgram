@@ -579,7 +579,7 @@
                     var publicKeys = this.publickeyArr.join(",");
                     this.schemeConfig['ReturnUrl'] = 'https://multisignwallet.elaphant.app/walletDetails.html?' + 'name=' + this.walletName + '&' + 'requiredCount=' + this.schemeConfig['RequiredCount'] + '&' + 'PublicKeys=' + publicKeys;
                     var url = this.buildMultiCreate();
-                    var turl = 'https://elephantwallet.app/redirect?appName=ELA Multi-sig Wallet&appTitle=ELA Multi-sig Wallet&redirectURL=' + encodeURIComponent(url);
+                    var turl = 'https://launch.elaphant.app?appName=ELA Multi-sig Wallet&appTitle=ELA Multi-sig Wallet&redirectURL=' + encodeURIComponent(url);
                     location.href = turl;
                     //location.href = 'walletDetails.html?' + 'name=' + this.walletName + '&' + 'requiredCount=' + this.schemeConfig['RequiredCount'] + '&' + 'PublicKeys=' + publicKeys + '&' + 'Address=' + '8ZCY9ksW4bxz7FCYARkXYCGmgkzABTSvwB';
                 }
