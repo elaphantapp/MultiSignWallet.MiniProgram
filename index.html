@@ -423,7 +423,6 @@
             createWallet() {
                 var url = this.buildIdentity();
                 var turl = 'https://launch.elaphant.app?appName=ELA Multi-sig Wallet&autoRedirect=True&appTitle=ELA Multi-sig Wallet&redirectURL=' + encodeURIComponent(url);
-                console.log("=========" + turl);
                 location.href = turl;
                 // location.href = 'createWallet.html';
             },
