@@ -4,8 +4,10 @@
 <head>
     <meta charset="utf-8">
     <title>Multi-signature Wallet</title>
+    <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
+    <script src="https://cdn.bootcss.com/lodash.js/4.17.12-pre/lodash.min.js"></script>
 </head>
 <style type="text/css">
     .fl {
@@ -391,7 +393,14 @@
             },
             curLangule: {},
             curLanguleKey: 'zh',
-            walletList: {}
+            walletList: {},
+            schemeConfig: {
+                "AppID": "f4d54cd97afa828a9705e38eb679fad564cf3adf4cecd1a5503498155969b07baaa4c4a016084c0f21e06c59e76c33929925052d7d0ae3cfc679a0fdf48ec23f",
+                "AppName": "ELA Multi-sig Wallet",
+                "DID": "ipFFpL1JwPRQKfhmxak8r1wWEbdkJ3rXZu",
+                "PublicKey": "035731ff69f8cfdcd9881e573143d71de2390b2e8e71fa14729e6b506f5d74939d",
+                "ReturnUrl": "",
+            }
         },
         methods: {
             getLanugle: function() {
@@ -412,7 +421,23 @@
                 }
             },
             createWallet() {
-                location.href = 'createWallet.html';
+                var url = this.buildIdentity();
+                var turl = 'https://launch.elaphant.app?appName=ELA Multi-sig Wallet&autoRedirect=True&appTitle=ELA Multi-sig Wallet&redirectURL=' + encodeURIComponent(url);
+                console.log("=========" + turl);
+                location.href = turl;
+                // location.href = 'createWallet.html';
+            },
+            buildIdentity() {
+                this.schemeConfig['ReturnUrl'] = 'https://multisignwallet.elaphant.app/createWallet.html';
+                var url = "elaphant://identity?";
+                _.forEach(this.schemeConfig, function(val, key, index) {
+                    if (key === 'ReturnUrl') {
+                        val = encodeURIComponent(val);
+                    }
+                    url += key + '=' + val + '&';
+                });
+
+                return url.substring(0, url.length - 1);
             },
             clickItem(address) {
                 location.href = 'walletDetails.html?' + 'Address=' + address;

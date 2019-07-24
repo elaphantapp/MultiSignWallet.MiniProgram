@@ -702,6 +702,15 @@
                     });
                 }
                 return isName;
+            },
+            getUrlParam: function(name) {
+                //正则表达式过滤
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+                //正则规则
+                var r = window.location.search.substr(1).match(reg);
+
+                if (r != null) return decodeURI(r[2]);
+                return null;
             }
         },
         created: function() {
@@ -715,7 +724,13 @@
             // this.getLanugle();
         },
         mounted() {
-            this.walletList = localStorage.getItem('ELA-Multi-sig-Wallet') || "";
+            var item = this.getUrlParam("Data") || "";
+            if (item != "") {
+                var mdata = decodeURIComponent(item);
+                var json = JSON.parse(mdata);
+                var publicKey = json.PublicKey;
+                this.publickeyArr.push(publicKey);
+            }
             if (this.publickeyArr.length > 2) {
                 this.schemeConfig['RequiredCount'] = this.publickeyArr.length - 1;
             } else {
