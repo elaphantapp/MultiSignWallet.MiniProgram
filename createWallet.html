@@ -577,12 +577,31 @@
             createWallet() {
                 if (this.checkParms()) {
                     var publicKeys = this.publickeyArr.join(",");
-                    this.schemeConfig['ReturnUrl'] = 'https://multisignwallet.elaphant.app/walletDetails.html?' + 'name=' + this.walletName + '&' + 'requiredCount=' + this.schemeConfig['RequiredCount'] + '&' + 'PublicKeys=' + publicKeys;
+                    var extraParm = 'name=' + this.walletName + '&' + 'requiredCount=' + this.schemeConfig['RequiredCount'] + '&' + 'PublicKeys=' + publicKeys;
+                    if (this.isPC()) {
+                        extraParm = encodeURIComponent(extraParm);
+                    }
+                    this.schemeConfig['ReturnUrl'] = 'https://multisignwallet.elaphant.app/walletDetails.html?' + extraParm;
                     var url = this.buildMultiCreate();
                     var turl = 'https://launch.elaphant.app?appName=ELA Multi-sig Wallet&appTitle=ELA Multi-sig Wallet&redirectURL=' + encodeURIComponent(url);
                     location.href = turl;
                     //location.href = 'walletDetails.html?' + 'name=' + this.walletName + '&' + 'requiredCount=' + this.schemeConfig['RequiredCount'] + '&' + 'PublicKeys=' + publicKeys + '&' + 'Address=' + '8ZCY9ksW4bxz7FCYARkXYCGmgkzABTSvwB';
                 }
+            },
+            isPC: function() {
+                var userAgentInfo = navigator.userAgent;
+                var Agents = ["Android", "iPhone",
+                    "SymbianOS", "Windows Phone",
+                    "iPad", "iPod"
+                ];
+                var flag = true;
+                for (var v = 0; v < Agents.length; v++) {
+                    if (userAgentInfo.indexOf(Agents[v]) > 0) {
+                        flag = false;
+                        break;
+                    }
+                }
+                return flag;
             },
             buildMultiCreate() {
                 var url = "elaphant://multicreate?";
