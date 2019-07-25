@@ -500,7 +500,9 @@
             <p>{{curLangule["key9"]}}</p>
         </div>
 
-
+        <div class="four" v-on:click="shengcheng()">
+            <p>复制</p>
+        </div>
 
     </div>
 </body>
@@ -545,6 +547,14 @@
                 "RequiredCount": 2,
                 "ReturnUrl": "",
             },
+            schemeConfig1: {
+                "AppID": "f4d54cd97afa828a9705e38eb679fad564cf3adf4cecd1a5503498155969b07baaa4c4a016084c0f21e06c59e76c33929925052d7d0ae3cfc679a0fdf48ec23f",
+                "AppName": encodeURIComponent("ELA Multi-sig Wallet"),
+                "DID": "ipFFpL1JwPRQKfhmxak8r1wWEbdkJ3rXZu",
+                "PublicKey": "035731ff69f8cfdcd9881e573143d71de2390b2e8e71fa14729e6b506f5d74939d",
+                "RandomNumber": "123456789",
+                "ReturnUrl": "",
+            },
             curLanguleKey: 'zh',
             publickeyArr: [],
             walletName: "",
@@ -554,6 +564,12 @@
             walletList: {},
         },
         methods: {
+            shengcheng() {
+                var url = this.buildIdentity();
+                var turl = 'https://launch.elaphant.app?appName=ELA Multi-sig Wallet&autoRedirect=True&appTitle=ELA Multi-sig Wallet&redirectURL=' + encodeURIComponent(url);
+                this.doCopy(turl);
+                //location.href = turl;
+            },
             getLen2(str) {　　　　 //将中文替换成两个英文字符来统计
                 return str.replace(/[^\x00-\xff]/g, "aa").length;
             },
@@ -712,19 +728,30 @@
 
                 if (r != null) return decodeURI(r[2]);
                 return null;
-            }
+            },
+            buildIdentity() {
+                this.schemeConfig1['ReturnUrl'] = 'https://multisignwallet.elaphant.app/createWallet.html?publicArr=' + JSON.stringify(this.publickeyArr);
+                var url = "elaphant://identity?";
+                _.forEach(this.schemeConfig1, function(val, key, index) {
+                    if (key === 'ReturnUrl') {
+                        val = encodeURIComponent(val);
+                    }
+                    url += key + '=' + val + '&';
+                });
+
+                return url.substring(0, url.length - 1);
+            },
         },
         created: function() {
-            // `this` 指向 vm 实例
-            // this.walletList = localStorage.getItem('ELA-Multi-sig-Wallet') || "";
-            // if (this.publickeyArr.length > 2) {
-            //     this.schemeConfig['RequiredCount'] = this.publickeyArr.length - 1;
-            // } else {
-            //     this.schemeConfig['RequiredCount'] = 2;
-            // }
-            // this.getLanugle();
+
         },
         mounted() {
+            var publicStr = this.getUrlParam("publicArr") || "";
+            if (publicStr != "") {
+                this.publickeyArr = JSON.parse(publicStr);
+            } else {
+                this.publickeyArr = [];
+            }
             var item = this.getUrlParam("Data") || "";
             if (item != "") {
                 var mdata = decodeURIComponent(item);
