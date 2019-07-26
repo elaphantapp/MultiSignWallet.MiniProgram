@@ -623,7 +623,7 @@
                 var obj = JSON.parse(localStorage.getItem("ELA-Multi-sig-Wallet"));
                 delete obj[this.wallet['Address']];
                 localStorage.setItem('ELA-Multi-sig-Wallet', JSON.stringify(obj));
-                location.href = 'walletList.html';
+                location.href = 'index.html';
                 this.showMask = false;
             },
             click_close() {
