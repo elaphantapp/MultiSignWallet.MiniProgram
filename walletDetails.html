@@ -760,7 +760,10 @@
                 }
 
                 return true;
-            }
+            },
+            goBack() {
+                location.href = './index.html';
+            },
         },
         created: function() {
             // `this` 指向 vm 实例
@@ -806,8 +809,16 @@
 
             // this.getLanugle();
         },
+        destroyed() {
+            window.removeEventListener('popstate', this.goBack, false);
+        },
         mounted: function() {
             // `this` 指向 vm 实例
+            if (window.history && window.history.pushState) {
+                // 向历史记录中插入了当前页
+                history.pushState(null, null, document.URL);
+                window.addEventListener('popstate', this.goBack, false);
+            }
             this.getLanugle();
             var item = this.getUrlParam("Data") || "";
 
