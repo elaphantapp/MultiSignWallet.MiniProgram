@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Receive</title>
+    <title></title>
     <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
@@ -357,10 +357,12 @@
         data: {
             loading: true,
             zh: {
+                title: "接受",
                 key27: '分享地址',
                 key29: '复制成功'
             },
             en: {
+                title: "Receive",
                 key27: 'Share Address',
                 key29: 'Copy Success'
             },
@@ -419,6 +421,7 @@
             // `this` 指向 vm 实例
             this.qrcode = this.getUrlParam('Address');
             this.getLanugle();
+            document.title = this.curLangule["title"];
         }
     });
 </script>

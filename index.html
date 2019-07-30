@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Multi-signature Wallet</title>
+    <title></title>
     <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
@@ -380,12 +380,14 @@
         data: {
             loading: true,
             zh: {
+                title: 'ELA多签钱包',
                 key: '我的钱包',
                 key2: '+创建一个多签钱包',
                 key3: '最近的花费: ',
                 key4: '已批准'
             },
             en: {
+                title: 'Multi-signature Wallet',
                 key: 'My wallets',
                 key2: '+ Add multi-signature wallet',
                 key3: 'Latest expenditure: ',
@@ -454,6 +456,7 @@
             // this.getLanugle();
         },
         mounted() {
+
             var walletList = localStorage.getItem('ELA-Multi-sig-Wallet') || "";
             if (walletList === "") {
                 this.walletList = {};
@@ -461,6 +464,7 @@
                 this.walletList = JSON.parse(walletList);
             }
             this.getLanugle();
+            document.title = this.curLangule["title"];
         }
     });
 </script>

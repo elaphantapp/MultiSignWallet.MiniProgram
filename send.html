@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Send</title>
+    <title></title>
     <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.6.10/dist/vue.js"></script>
@@ -427,6 +427,7 @@
         data: {
             loading: true,
             zh: {
+                title: "发送",
                 key5: '复制',
                 key17: '发送至',
                 key18: 'ELA接收地址',
@@ -448,6 +449,7 @@
                 key30: '余额',
             },
             en: {
+                title: "Send",
                 key5: 'copy',
                 key17: 'Send to',
                 key18: 'ELA receive address',
@@ -731,6 +733,7 @@
         mounted: function() {
             // `this` 指向 vm 实例
             this.getLanugle();
+            document.title = this.curLangule["title"];
             this.address = this.getUrlParam("Address");
             var walletList = localStorage.getItem('ELA-Multi-sig-Wallet') || "";
             this.walletList = JSON.parse(walletList)[this.address];
