@@ -368,6 +368,7 @@
         background: #0070C8;
         border-radius: 200px;
         color: #FFFFFF;
+        cursor: pointer;
     }
     
     .walletname {
@@ -435,7 +436,7 @@
         <div class="list">
             <div class="del" v-for="(item,index) in publickeyArr">
                 <div class="left fl">
-                    <div class="fl" style="width:10%;height:48px;text-align: center" v-on:click='del(item)'>
+                    <div class="fl" style="width:10%;height:48px;text-align: center;cursor: pointer;" v-on:click='del(item)'>
                         <span class="jianhao">-</span>
                     </div>
                     <div class="fl" style="width:90%;height:48px;line-height: 48px">
@@ -443,7 +444,7 @@
                                         </textarea>
                     </div>
                 </div>
-                <div class="right fr" v-on:click="doCopy(item)">
+                <div class="right fr" v-on:click="doCopy(item)" style="cursor: pointer;">
                     <span>{{curLangule["key5"]}}</span>
                 </div>
                 <div style="padding-bottom:2px">&nbsp;</div>
@@ -452,7 +453,7 @@
 
         <div class="add">
             <div class="left fl">
-                <div class="fl" style="width:10%;height:48px;text-align: center" v-on:click="add">
+                <div class="fl" style="width:10%;height:48px;text-align: center;;cursor: pointer;" v-on:click="add">
                     <span>+</span>
                 </div>
                 <div class="fl" style="width:90%;height:48px;line-height: 48px">
@@ -460,7 +461,7 @@
                             </textarea>
                 </div>
             </div>
-            <div class="right fr" v-on:click="doCopy(spublic)">
+            <div class="right fr" v-on:click="doCopy(spublic)" style="cursor: pointer;">
                 <span>{{curLangule["key5"]}}</span>
             </div>
         </div>
@@ -482,7 +483,7 @@
                 <div class="fr">
                     <div class="jishu">
                         <span style="width: 20px;
-                        display:inline-block;text-align: center;font-size: 18px;color: #888888;" v-on:click="jianhao">-</span>
+                        display:inline-block;text-align: center;font-size: 18px;color: #888888;cursor: pointer;" v-on:click="jianhao">-</span>
                         <span style="width:1px;
                             display:inline-block;text-align: center;font-size: 18px;color: #DEDEE0;">|</span>
                         <span style="width: 20px;
@@ -490,7 +491,7 @@
                         <span style="width:1px;
                             display:inline-block;text-align: center;font-size: 18px;color: #DEDEE0;">|</span>
                         <span style="width: 20px;
-                            display:inline-block;text-align: center;font-size: 18px;color: #888888" v-on:click="jiahao">+</span>
+                            display:inline-block;text-align: center;font-size: 18px;color: #888888;cursor: pointer;" v-on:click="jiahao">+</span>
                     </div>
                 </div>
             </div>
