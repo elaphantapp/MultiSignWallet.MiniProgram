@@ -563,7 +563,8 @@
                         if (data.status === 200) {
                             var url = v.buildMultiTx(data.result);
                             var turl = 'https://launch.elaphant.app?appName=ELA Multi-sig Wallet&autoRedirect=True&appTitle=ELA Multi-sig Wallet&redirectURL=' + encodeURIComponent(url);
-                            location.href = turl;
+                            //location.href = turl;
+                            window.open(turl);
                             //location.href = 'http://dev1.elapps.net/history.html?' + 'Address=' + this.address;
                         }
                     }).catch((err => {
