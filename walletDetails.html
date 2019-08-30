@@ -626,9 +626,10 @@
         },
         methods: {
             click_ok() {
-                var obj = JSON.parse(localStorage.getItem("ELA-Multi-sig-Wallet"));
+                var did = localStorage.getItem("ELA-Multi-sig-Wallet-did") || "";
+                var obj = JSON.parse(localStorage.getItem("ELA-Multi-sig-Wallet-" + did));
                 delete obj[this.wallet['Address']];
-                localStorage.setItem('ELA-Multi-sig-Wallet', JSON.stringify(obj));
+                localStorage.setItem('ELA-Multi-sig-Wallet-' + did, JSON.stringify(obj));
                 location.href = 'index.html';
                 this.showMask = false;
             },
@@ -844,7 +845,8 @@
                 }
 
             });
-            var walletList = localStorage.getItem('ELA-Multi-sig-Wallet') || "";
+            var did = localStorage.getItem("ELA-Multi-sig-Wallet-did") || "";
+            var walletList = localStorage.getItem('ELA-Multi-sig-Wallet-' + did) || "";
             if (walletList === "") {
                 walletList = {};
             } else {
@@ -859,7 +861,7 @@
                 this.publickeyArr = this.wallet['PublicKeys'].split(',');
                 this.wallet["totalPublic"] = this.publickeyArr.length;
                 walletList[this.wallet['Address']] = this.wallet;
-                localStorage.setItem('ELA-Multi-sig-Wallet', JSON.stringify(walletList));
+                localStorage.setItem('ELA-Multi-sig-Wallet-' + did, JSON.stringify(walletList));
             } else {
                 this.wallet = walletList[this.wallet['Address']];
                 document.title = this.wallet['name'];

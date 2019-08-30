@@ -403,7 +403,8 @@
                 "PublicKey": "035731ff69f8cfdcd9881e573143d71de2390b2e8e71fa14729e6b506f5d74939d",
                 "RandomNumber": "123456789",
                 "ReturnUrl": "",
-            }
+            },
+            dataStr: "",
         },
         methods: {
             getLanugle: function() {
@@ -424,13 +425,13 @@
                 }
             },
             createWallet() {
-                var url = this.buildIdentity();
-                var turl = 'https://launch.elaphant.app?appName=ELA Multi-sig Wallet&autoRedirect=True&appTitle=ELA Multi-sig Wallet&redirectURL=' + encodeURIComponent(url);
-                location.href = turl;
-                // location.href = 'createWallet.html';
+                // var url = this.buildIdentity();
+                // var turl = 'https://launch.elaphant.app?appName=ELA Multi-sig Wallet&autoRedirect=True&appTitle=ELA Multi-sig Wallet&redirectURL=' + encodeURIComponent(url);
+                // location.href = turl;
+                location.href = './createWallet.html?Data=' + this.dataStr;
             },
             buildIdentity() {
-                this.schemeConfig['ReturnUrl'] = 'https://multisignwallet.elaphant.app/createWallet.html';
+                this.schemeConfig['ReturnUrl'] = 'https://multisignwallet.elaphant.app/index.html';
                 var url = "elaphant://identity?";
                 _.forEach(this.schemeConfig, function(val, key, index) {
                     if (key === 'ReturnUrl') {
@@ -443,6 +444,15 @@
             },
             clickItem(address) {
                 location.href = 'walletDetails.html?' + 'Address=' + address;
+            },
+            getUrlParam: function(name) {
+                //正则表达式过滤
+                var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+                //正则规则
+                var r = window.location.search.substr(1).match(reg);
+
+                if (r != null) return decodeURI(r[2]);
+                return null;
             }
         },
         created: function() {
@@ -456,15 +466,26 @@
             // this.getLanugle();
         },
         mounted() {
-
-            var walletList = localStorage.getItem('ELA-Multi-sig-Wallet') || "";
-            if (walletList === "") {
-                this.walletList = {};
-            } else {
-                this.walletList = JSON.parse(walletList);
-            }
             this.getLanugle();
             document.title = this.curLangule["title"];
+            this.dataStr = this.getUrlParam("Data") || "";
+            if (this.dataStr === "") {
+                var url = this.buildIdentity();
+                var turl = 'https://launch.elaphant.app?appName=ELA Multi-sig Wallet&autoRedirect=True&appTitle=ELA Multi-sig Wallet&redirectURL=' + encodeURIComponent(url);
+                location.href = turl;
+            } else {
+                var item = JSON.parse(decodeURIComponent(this.dataStr));
+                localStorage.setItem("ELA-Multi-sig-Wallet-did", item.DID);
+                console.log("======" + item.DID);
+                var walletList = localStorage.getItem('ELA-Multi-sig-Wallet-' + item.DID) || "";
+                if (walletList === "") {
+                    this.walletList = {};
+                } else {
+                    this.walletList = JSON.parse(walletList);
+                }
+            }
+
+
         }
     });
 </script>

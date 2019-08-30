@@ -631,6 +631,7 @@
                 error2: '公钥已存在',
                 error3: '钱包名字已存在',
                 error4: '钱包名字不能超过30字符',
+                error5: '公钥重复',
                 key36: "返回",
                 key37: '分享',
                 key38: '完成',
@@ -652,6 +653,7 @@
                 error2: 'The public key already exists',
                 error3: 'The wallet name already exists',
                 error4: "Wallet name can't be more than 30 characters",
+                error5: 'The public key Repeat',
                 key36: "Back",
                 key37: 'Share',
                 key38: 'Complete',
@@ -836,12 +838,34 @@
                     return false;
                 }
 
+                if (this.isRepeat(this.publickeyArr)) {
+                    this.toast(this.curLangule['error5']);
+                    return false;
+                }
+
                 if (this.publickeyArr.length < 2) {
                     this.toast(this.curLangule['key6']);
                     return false;
                 }
 
                 return true;
+            },
+            isRepeat(arr) {
+
+                var hash = {};
+
+                for (var i in arr) {
+
+                    if (hash[arr[i]])
+
+                        return true;
+
+                    hash[arr[i]] = true;
+
+                }
+
+                return false;
+
             },
             isExitWalletName(name) {
                 var isName = false;
